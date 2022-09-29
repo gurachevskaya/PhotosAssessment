@@ -17,9 +17,9 @@ class PhotosCollectionViewController: UIViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: PhotoCollectionViewCell.reuseID)
         collectionView.delegate = self
+        collectionView.prefetchDataSource = self
         return collectionView
     }()
-       
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +46,20 @@ class PhotosCollectionViewController: UIViewController {
     }
     
     private func setupDataSouce() {
-        presenter.dataSource = .init(collectionView: collectionView, cellProvider: { collectionView, indexPath, asset -> UICollectionViewCell? in
+        presenter.dataSource = .init(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, asset -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.reuseID, for: indexPath) as! PhotoCollectionViewCell
-            cell.setupWith(cellModel: .init(image: UIImage(), title: asset.name))
+           
+            let imageLoadingTask = Task {
+                let image = try? await self?.presenter.fetchImage(id: asset.name)
+                if !Task.isCancelled {
+                    cell.setupWith(cellModel: .init(image: image))
+                }
+            }
+            
+            cell.onReuse = {
+                imageLoadingTask.cancel()
+            }
+                        
             return cell
         })
     }
@@ -66,6 +77,12 @@ extension PhotosCollectionViewController: UICollectionViewDelegate {
 //        destVC.delegate = self
 //        destVC.asset = asset
 //        present(destVC, animated: true)
+    }
+}
+
+extension PhotosCollectionViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        presenter.startCachingAssets(indexPaths: indexPaths)
     }
 }
 

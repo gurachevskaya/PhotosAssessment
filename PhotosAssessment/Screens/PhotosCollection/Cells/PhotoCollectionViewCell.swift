@@ -10,15 +10,15 @@ import SnapKit
 
 final class PhotoCollectionViewCell: UICollectionViewCell {
     static let reuseID = "PhotoCollectionViewCell"
-
+    
     struct ViewModel {
-        let image: UIImage
-        let title: String
+        let image: UIImage?
     }
 
-    private var cellModel: ViewModel = ViewModel(image: .init(), title: "")
+    private var cellModel: ViewModel = ViewModel(image: nil)
     private let imageView = UIImageView()
-    private let titleLabel = UILabel()
+        
+    var onReuse: () -> Void = {}
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -32,6 +32,7 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
+        onReuse()
     }
 
     func setupWith(cellModel: ViewModel) {
@@ -41,13 +42,11 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
 
     private func updateUI() {
         imageView.image = cellModel.image
-        titleLabel.text = cellModel.title
     }
 
     private func setupUI() {
         setupBackground()
         addImageView()
-        addTitle()
     }
     
     private func setupBackground() {
@@ -58,13 +57,6 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         imageView.contentMode = .scaleAspectFit
         imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-    }
-    
-    private func addTitle() {
-        contentView.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }

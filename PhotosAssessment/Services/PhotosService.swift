@@ -14,6 +14,8 @@ enum PhotosServiceError: Error {
 }
 
 protocol PhotosServiceProtocol: AnyObject {
+    var delegate: PhotosServiceDelegate? { get set }
+    
     func requestAuthorization() async throws -> PHFetchResultCollection?
     
     func fetchImage(
@@ -21,13 +23,19 @@ protocol PhotosServiceProtocol: AnyObject {
         targetSize: CGSize,
         contentMode: PHImageContentMode
     ) async throws -> UIImage?
+    
+    func startCachingAssets(indexPaths: [IndexPath])
+}
+
+protocol PhotosServiceDelegate: AnyObject {
+    func photoLibraryDidChange(results: PHFetchResultCollection)
 }
 
 typealias PHAssetLocalIdentifier = String
 
 class PhotosService: NSObject, PhotosServiceProtocol {
     private var imageCachingManager: PHCachingImageManager
-    
+
     init(imageCachingManager: PHCachingImageManager) {
         self.imageCachingManager = imageCachingManager
         super.init()
@@ -35,9 +43,11 @@ class PhotosService: NSObject, PhotosServiceProtocol {
         registerObserver()
     }
     
+    weak var delegate: PhotosServiceDelegate?
+    
     var authorizationStatus: PHAuthorizationStatus = .notDetermined
     var results = PHFetchResultCollection(fetchResult: .init())
-    
+        
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -55,7 +65,7 @@ class PhotosService: NSObject, PhotosServiceProtocol {
                     if let results = self?.fetchAllPhotos() {
                         continuation.resume(returning: results)
                     }
-
+                    
                 case .denied, .notDetermined, .restricted:
                     continuation.resume(throwing: PhotosServiceError.restrictedAccess)
                     
@@ -71,7 +81,7 @@ class PhotosService: NSObject, PhotosServiceProtocol {
         let fetchOptions = PHFetchOptions()
         fetchOptions.includeHiddenAssets = false
         fetchOptions.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: false)
+            NSSortDescriptor(key: "creationDate", ascending: true)
         ]
         results.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
         
@@ -113,6 +123,16 @@ class PhotosService: NSObject, PhotosServiceProtocol {
         }
     }
     
+    func startCachingAssets(indexPaths: [IndexPath]) {
+        var assets: [PHAsset] = []
+        for indexPath in indexPaths {
+            let asset = results.fetchResult[indexPath.item]
+            assets.append(asset)
+        }
+        
+        imageCachingManager.startCachingImages(for: assets, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: nil)
+    }
+    
     func resetCachedAssets() {
         imageCachingManager.stopCachingImagesForAllAssets()
     }
@@ -120,6 +140,9 @@ class PhotosService: NSObject, PhotosServiceProtocol {
 
 extension PhotosService: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        print("photo library did change")
+        if let change = changeInstance.changeDetails(for: results.fetchResult) {
+            results.fetchResult = change.fetchResultAfterChanges
+            delegate?.photoLibraryDidChange(results: results)
+        }
     }
 }

@@ -14,6 +14,8 @@ protocol PhotosCollectionPresenterProtocol {
     var dataSource: UICollectionViewDiffableDataSource<Section, PhotoAsset>! { get set }
     
     func viewIsReady()
+    func fetchImage(id: PHAssetLocalIdentifier) async throws -> UIImage?
+    func startCachingAssets(indexPaths: [IndexPath])
 }
 
 protocol PhotosCollectionPresenterDelegate: AnyObject {
@@ -37,6 +39,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     var snapshot = NSDiffableDataSourceSnapshot<Section, PhotoAsset>()
     
     func viewIsReady() {
+        photosService.delegate = self
         loadPhotos()
     }
     
@@ -44,26 +47,56 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         Task {
             do {
                 let photos = try await photosService.requestAuthorization()
-                let mapped = photos?.map {
-                    PhotoAsset(name: $0.localIdentifier)
+                let mapped = photos?.map { PhotoAsset(name: $0.localIdentifier) }
+                guard let mapped = mapped else { return }
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.updateData(on: mapped)
                 }
-                if let mapped = mapped {
-                    updateData(on: mapped)
+            } catch let error as PhotosServiceError {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    let mappedError = self.mapError(error: error)
+                    self.delegate?.didFailWithError(mappedError)
                 }
-            } catch let error {
-                print(error)
             }
         }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-//            self?.delegate?.didLoadPhotos()
-//            self?.updateData(on: MockData.photosModel)
-//        }
     }
     
+    func startCachingAssets(indexPaths: [IndexPath]) {
+        photosService.startCachingAssets(indexPaths: indexPaths)
+    }
+    
+    func fetchImage(id: PHAssetLocalIdentifier) async throws -> UIImage? {
+        try await photosService.fetchImage(
+            byLocalIdentifier: id,
+            targetSize: CGSize(width: 200, height: 200),
+            contentMode: .aspectFill
+        )
+    }
+    
+    private func mapError(error: PhotosServiceError) -> String {
+        switch error {
+        case .restrictedAccess:
+            return "Access restricted"
+        case .phAssetNotFound:
+            return "Asset not found"
+        }
+    }
+        
     private func updateData(on model: [PhotoAsset]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, PhotoAsset>()
         snapshot.appendSections([.main])
         snapshot.appendItems(model)
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension PhotosCollectionPresenter: PhotosServiceDelegate {
+    func photoLibraryDidChange(results: PHFetchResultCollection) {
+        let mapped = results.map { PhotoAsset(name: $0.localIdentifier) }
+        DispatchQueue.main.async { [weak self] in
+            self?.updateData(on: mapped)
+        }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,7 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let viewController = PhotosCollectionViewController()
-            let presenter = PhotosCollectionPresenter()
+            let presenter = PhotosCollectionPresenter(
+                photosService: PhotosService(
+                    imageCachingManager: PHCachingImageManager()
+                )
+            )
             presenter.delegate = viewController
             viewController.presenter = presenter
             let navigationController = UINavigationController(rootViewController: viewController)

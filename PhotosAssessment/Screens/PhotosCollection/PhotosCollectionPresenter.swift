@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 protocol PhotosCollectionPresenterProtocol {
     var model: [PhotoAsset]? { get }
@@ -22,7 +23,10 @@ protocol PhotosCollectionPresenterDelegate: AnyObject {
 
 class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
-    init() {
+    private var photosService: PhotosServiceProtocol
+
+    init(photosService: PhotosServiceProtocol) {
+        self.photosService = photosService
     }
     
     weak var delegate: PhotosCollectionPresenterDelegate?
@@ -37,10 +41,23 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
     
     private func loadPhotos() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.delegate?.didLoadPhotos()
-            self?.updateData(on: MockData.photosModel)
+        Task {
+            do {
+                let photos = try await photosService.requestAuthorization()
+                let mapped = photos?.map {
+                    PhotoAsset(name: $0.localIdentifier)
+                }
+                if let mapped = mapped {
+                    updateData(on: mapped)
+                }
+            } catch let error {
+                print(error)
+            }
         }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+//            self?.delegate?.didLoadPhotos()
+//            self?.updateData(on: MockData.photosModel)
+//        }
     }
     
     private func updateData(on model: [PhotoAsset]) {

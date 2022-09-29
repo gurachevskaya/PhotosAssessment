@@ -28,6 +28,11 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+    }
 
     func setupWith(cellModel: ViewModel) {
         self.cellModel = cellModel
@@ -60,7 +65,7 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     private func addTitle() {
         contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
 }

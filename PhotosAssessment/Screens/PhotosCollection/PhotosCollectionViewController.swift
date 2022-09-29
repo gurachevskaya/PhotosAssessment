@@ -92,5 +92,6 @@ extension PhotosCollectionViewController: PhotosCollectionPresenterDelegate {
     }
     
     func didFailWithError(_ error: String) {
+        showAlert(text: error)
     }
 }

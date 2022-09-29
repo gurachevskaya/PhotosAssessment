@@ -26,6 +26,9 @@
 		1857631928E4C59A00BC3FF6 /* PhotoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631828E4C59A00BC3FF6 /* PhotoAsset.swift */; };
 		1857631C28E5972700BC3FF6 /* PhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631B28E5972700BC3FF6 /* PhotosService.swift */; };
 		1857631F28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */; };
+		1857632128E5B42200BC3FF6 /* EventsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632028E5B42200BC3FF6 /* EventsProxy.swift */; };
+		1857632328E5B4FE00BC3FF6 /* NSPointerArray+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632228E5B4FE00BC3FF6 /* NSPointerArray+Ext.swift */; };
+		1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */; };
 		4FFE91E19F8F8AFE1D43A7E7 /* Pods_PhotosAssessment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F75BA8A540AAF6FB3D11E080 /* Pods_PhotosAssessment.framework */; };
 		F896225218F2D638ED241604 /* Pods_PhotosAssessmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765263E527586CA1B715575E /* Pods_PhotosAssessmentTests.framework */; };
 /* End PBXBuildFile section */
@@ -231,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */,
+				1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -499,6 +503,7 @@
 			files = (
 				1814E92E28E4946A00B1FCBF /* ViewController.swift in Sources */,
 				1814E92A28E4946A00B1FCBF /* AppDelegate.swift in Sources */,
+				1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */,
 				1814E92C28E4946A00B1FCBF /* SceneDelegate.swift in Sources */,
 				1857631928E4C59A00BC3FF6 /* PhotoAsset.swift in Sources */,
 				1857631128E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift in Sources */,

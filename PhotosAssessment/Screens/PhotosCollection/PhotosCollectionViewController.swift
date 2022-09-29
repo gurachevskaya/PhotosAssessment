@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class PhotosCollectionViewController: UIViewController {
-    var viewModel: PhotosCollectionViewModelProtocol!
+    var presenter: PhotosCollectionPresenterProtocol!
 
     private lazy var collectionView: UICollectionView = {
         let layout = UIHelper.createFourColumnFlowLayout(in: view)
@@ -24,14 +24,9 @@ class PhotosCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         config()
+        presenter.viewIsReady()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        viewModel.loadPhotos()
-    }
-     
     private func config() {
         configureViewController()
         setupCollectionView()
@@ -51,7 +46,7 @@ class PhotosCollectionViewController: UIViewController {
     }
     
     private func setupDataSouce() {
-        viewModel.dataSource = .init(collectionView: collectionView, cellProvider: { collectionView, indexPath, asset -> UICollectionViewCell? in
+        presenter.dataSource = .init(collectionView: collectionView, cellProvider: { collectionView, indexPath, asset -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.reuseID, for: indexPath) as! PhotoCollectionViewCell
             cell.setupWith(cellModel: .init(image: UIImage(), title: asset.name))
             return cell
@@ -61,7 +56,7 @@ class PhotosCollectionViewController: UIViewController {
 
 extension PhotosCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let asset = viewModel.model?[indexPath.item] else {
+        guard let asset = presenter.model?[indexPath.item] else {
             return
         }
         
@@ -71,5 +66,14 @@ extension PhotosCollectionViewController: UICollectionViewDelegate {
 //        destVC.delegate = self
 //        destVC.asset = asset
 //        present(destVC, animated: true)
+    }
+}
+
+extension PhotosCollectionViewController: PhotosCollectionPresenterDelegate {
+    func didLoadPhotos() {
+        print("did load")
+    }
+    
+    func didFailWithError(_ error: String) {
     }
 }

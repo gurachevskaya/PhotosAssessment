@@ -5,30 +5,40 @@
 //  Created by Karina gurachevskaya on 28.09.22.
 //
 
-import Combine
 import UIKit
 
-protocol PhotosCollectionViewModelProtocol {
+protocol PhotosCollectionPresenterProtocol {
     var model: [PhotoAsset]? { get }
+    var delegate: PhotosCollectionPresenterDelegate? { get set }
     var dataSource: UICollectionViewDiffableDataSource<Section, PhotoAsset>! { get set }
     
-    func loadPhotos()
+    func viewIsReady()
 }
 
-class PhotosCollectionViewModel: PhotosCollectionViewModelProtocol {
+protocol PhotosCollectionPresenterDelegate: AnyObject {
+    func didLoadPhotos()
+    func didFailWithError(_ error: String)
+}
+
+class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     init() {
     }
+    
+    weak var delegate: PhotosCollectionPresenterDelegate?
         
     var model: [PhotoAsset]?
     
     var dataSource: UICollectionViewDiffableDataSource<Section, PhotoAsset>!
     var snapshot = NSDiffableDataSourceSnapshot<Section, PhotoAsset>()
     
-    private var cancellables: Set<AnyCancellable> = []
-
-    func loadPhotos() {
+    func viewIsReady() {
+        loadPhotos()
+    }
+    
+    private func loadPhotos() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.delegate?.didLoadPhotos()
             self?.updateData(on: MockData.photosModel)
         }
     }

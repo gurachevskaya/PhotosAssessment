@@ -16,7 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let viewController = PhotosCollectionViewController()
-            viewController.viewModel = PhotosCollectionViewModel()
+            let presenter = PhotosCollectionPresenter()
+            presenter.delegate = viewController
+            viewController.presenter = presenter
             let navigationController = UINavigationController(rootViewController: viewController)
             window.rootViewController = navigationController
             self.window = window

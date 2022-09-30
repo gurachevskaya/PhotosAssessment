@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 final class PhotoCollectionViewCell: UICollectionViewCell {
     static let reuseID = "PhotoCollectionViewCell"
@@ -55,9 +54,10 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
 
     private func addImageView() {
         contentView.addSubview(imageView)
-        imageView.contentMode = .scaleAspectFit
-        imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        imageView.prepareForAutoLayout()
+        imageView.pinEdgesTo(view: contentView)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+       
     }
 }

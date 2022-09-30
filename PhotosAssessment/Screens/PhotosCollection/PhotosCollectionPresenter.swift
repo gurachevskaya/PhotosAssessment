@@ -11,7 +11,7 @@ import Photos
 protocol PhotosCollectionPresenterProtocol {
     var model: [PhotoAsset]? { get }
     var delegate: PhotosCollectionPresenterDelegate? { get set }
-    var dataSource: UICollectionViewDiffableDataSource<Section, PhotoAsset>! { get set }
+    var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PhotoAsset>! { get set }
     
     func viewIsReady()
     func fetchImage(id: PHAssetLocalIdentifier) async throws -> UIImage?
@@ -35,8 +35,8 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         
     var model: [PhotoAsset]?
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, PhotoAsset>!
-    var snapshot = NSDiffableDataSourceSnapshot<Section, PhotoAsset>()
+    var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PhotoAsset>!
+    var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PhotoAsset>()
     
     func viewIsReady() {
         photosService.delegate = self
@@ -85,7 +85,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
         
     private func updateData(on model: [PhotoAsset]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, PhotoAsset>()
+        var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PhotoAsset>()
         snapshot.appendSections([.main])
         snapshot.appendItems(model)
         dataSource.apply(snapshot, animatingDifferences: true)

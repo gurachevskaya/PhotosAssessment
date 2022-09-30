@@ -7,4 +7,4 @@
 
 import Foundation
 
-enum Section { case main }
+enum PhotosCollectionSection { case main }

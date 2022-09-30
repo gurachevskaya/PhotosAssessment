@@ -6,19 +6,38 @@
 //
 
 import UIKit
-import SnapKit
 
 class PhotosCollectionViewController: UIViewController {
     var presenter: PhotosCollectionPresenterProtocol!
 
     private lazy var collectionView: UICollectionView = {
-        let layout = UIHelper.createFourColumnFlowLayout(in: view)
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: PhotoCollectionViewCell.reuseID)
         collectionView.delegate = self
         collectionView.prefetchDataSource = self
         return collectionView
+    }()
+    
+    private lazy var collectionLayout: UICollectionViewCompositionalLayout = {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1 / 4),
+                                             heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalWidth(1 / 4))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitem: item, count: 4)
+        
+        let section = NSCollectionLayoutSection(group: group)
+
+        let spacing: CGFloat = 5
+        group.interItemSpacing = .fixed(spacing)
+        section.interGroupSpacing = spacing
+
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        
+        return layout
     }()
     
     override func viewDidLoad() {
@@ -40,9 +59,8 @@ class PhotosCollectionViewController: UIViewController {
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        collectionView.prepareForAutoLayout()
+        collectionView.pinEdgesTo(view: view)
     }
     
     private func setupDataSouce() {

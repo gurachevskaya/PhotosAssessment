@@ -17,7 +17,6 @@
 		1814E94B28E4946C00B1FCBF /* PhotosAssessmentUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E94A28E4946C00B1FCBF /* PhotosAssessmentUITests.swift */; };
 		1814E94D28E4946C00B1FCBF /* PhotosAssessmentUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E94C28E4946C00B1FCBF /* PhotosAssessmentUITestsLaunchTests.swift */; };
 		1814E95B28E497A700B1FCBF /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E95A28E497A700B1FCBF /* PhotosCollectionViewController.swift */; };
-		1814E95E28E4995900B1FCBF /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E95D28E4995900B1FCBF /* UIHelper.swift */; };
 		1857630F28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857630E28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift */; };
 		1857631128E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631028E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift */; };
 		1857631428E4C14400BC3FF6 /* PhotosCollectionSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631328E4C14400BC3FF6 /* PhotosCollectionSection.swift */; };
@@ -28,6 +27,7 @@
 		1857632128E5B42200BC3FF6 /* EventsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632028E5B42200BC3FF6 /* EventsProxy.swift */; };
 		1857632328E5B4FE00BC3FF6 /* NSPointerArray+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632228E5B4FE00BC3FF6 /* NSPointerArray+Ext.swift */; };
 		1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */; };
+		18C90E5428E6E7C20065B368 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5328E6E7C20065B368 /* UIView+Ext.swift */; };
 		4FFE91E19F8F8AFE1D43A7E7 /* Pods_PhotosAssessment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F75BA8A540AAF6FB3D11E080 /* Pods_PhotosAssessment.framework */; };
 		F896225218F2D638ED241604 /* Pods_PhotosAssessmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765263E527586CA1B715575E /* Pods_PhotosAssessmentTests.framework */; };
 /* End PBXBuildFile section */
@@ -63,7 +63,6 @@
 		1814E94A28E4946C00B1FCBF /* PhotosAssessmentUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAssessmentUITests.swift; sourceTree = "<group>"; };
 		1814E94C28E4946C00B1FCBF /* PhotosAssessmentUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAssessmentUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1814E95A28E497A700B1FCBF /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
-		1814E95D28E4995900B1FCBF /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		1857630E28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		1857631028E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionPresenter.swift; sourceTree = "<group>"; };
 		1857631328E4C14400BC3FF6 /* PhotosCollectionSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionSection.swift; sourceTree = "<group>"; };
@@ -72,6 +71,7 @@
 		1857631B28E5972700BC3FF6 /* PhotosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosService.swift; sourceTree = "<group>"; };
 		1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHFetchResultCollection+Ext.swift"; sourceTree = "<group>"; };
 		1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		18C90E5328E6E7C20065B368 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		230E3756112219B62C2EC779 /* Pods-PhotosAssessmentTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotosAssessmentTests.release.xcconfig"; path = "Target Support Files/Pods-PhotosAssessmentTests/Pods-PhotosAssessmentTests.release.xcconfig"; sourceTree = "<group>"; };
 		69727822E9B3DE47A6203562 /* Pods-PhotosAssessment-PhotosAssessmentUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotosAssessment-PhotosAssessmentUITests.debug.xcconfig"; path = "Target Support Files/Pods-PhotosAssessment-PhotosAssessmentUITests/Pods-PhotosAssessment-PhotosAssessmentUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		765263E527586CA1B715575E /* Pods_PhotosAssessmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotosAssessmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,7 +179,6 @@
 		1814E95C28E4994E00B1FCBF /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				1814E95D28E4995900B1FCBF /* UIHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -233,6 +232,7 @@
 			children = (
 				1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */,
 				1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */,
+				18C90E5328E6E7C20065B368 /* UIView+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -267,8 +267,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1814E95028E4946C00B1FCBF /* Build configuration list for PBXNativeTarget "PhotosAssessment" */;
 			buildPhases = (
-				1814E92228E4946A00B1FCBF /* Sources */,
 				2AF529E32F2BDAE751F3B72B /* [CP] Check Pods Manifest.lock */,
+				1814E92228E4946A00B1FCBF /* Sources */,
 				1814E92328E4946A00B1FCBF /* Frameworks */,
 				1814E92428E4946A00B1FCBF /* Resources */,
 				F8774159C4B9CFC55246BE37 /* [CP] Embed Pods Frameworks */,
@@ -499,6 +499,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C90E5428E6E7C20065B368 /* UIView+Ext.swift in Sources */,
 				1814E92A28E4946A00B1FCBF /* AppDelegate.swift in Sources */,
 				1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */,
 				1814E92C28E4946A00B1FCBF /* SceneDelegate.swift in Sources */,
@@ -506,7 +507,6 @@
 				1857631128E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift in Sources */,
 				1857631728E4C53600BC3FF6 /* MockData.swift in Sources */,
 				1857631C28E5972700BC3FF6 /* PhotosService.swift in Sources */,
-				1814E95E28E4995900B1FCBF /* UIHelper.swift in Sources */,
 				1814E95B28E497A700B1FCBF /* PhotosCollectionViewController.swift in Sources */,
 				1857631428E4C14400BC3FF6 /* PhotosCollectionSection.swift in Sources */,
 				1857630F28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift in Sources */,
@@ -686,9 +686,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7WHGP9VV36;
+				DEVELOPMENT_TEAM = 84DXJF9WZG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PhotosAssessment/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow access to your gallery ";
@@ -704,6 +705,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = huracheuskaya.PhotosAssessment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -716,9 +718,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7WHGP9VV36;
+				DEVELOPMENT_TEAM = 84DXJF9WZG;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PhotosAssessment/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow access to your gallery ";
@@ -734,6 +737,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = huracheuskaya.PhotosAssessment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

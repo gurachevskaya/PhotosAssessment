@@ -88,13 +88,9 @@ extension PhotosCollectionViewController: UICollectionViewDelegate {
         guard let asset = presenter.model?[indexPath.item] else {
             return
         }
-        
-        print(asset)
-        
-//        let destVC = DetailsVC()
-//        destVC.delegate = self
-//        destVC.asset = asset
-//        present(destVC, animated: true)
+                
+        let destination = presenter.obtainDetailsViewController(asset: asset)
+        navigationController?.pushViewController(destination, animated: true)
     }
 }
 

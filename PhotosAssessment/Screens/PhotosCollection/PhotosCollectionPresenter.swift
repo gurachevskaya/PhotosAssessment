@@ -16,6 +16,7 @@ protocol PhotosCollectionPresenterProtocol {
     func viewIsReady()
     func fetchImage(id: PHAssetLocalIdentifier) async throws -> UIImage?
     func startCachingAssets(indexPaths: [IndexPath])
+    func obtainDetailsViewController(asset: PhotoAsset) -> UIViewController
 }
 
 protocol PhotosCollectionPresenterDelegate: AnyObject {
@@ -75,6 +76,15 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         )
     }
     
+    func obtainDetailsViewController(asset: PhotoAsset) -> UIViewController {
+        let destinationController = DetailsViewController()
+        let destinationPresenter = DetailsPresenter()
+        destinationController.presenter = destinationPresenter
+        destinationPresenter.asset = asset
+        
+        return destinationController
+    }
+    
     private func mapError(error: PhotosServiceError) -> String {
         switch error {
         case .restrictedAccess:
@@ -85,6 +95,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
         
     private func updateData(on model: [PhotoAsset]) {
+        self.model = model
         var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PhotoAsset>()
         snapshot.appendSections([.main])
         snapshot.appendItems(model)

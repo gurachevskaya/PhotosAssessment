@@ -29,6 +29,7 @@
 		18C90E5628E7054B0065B368 /* SaliencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5528E7054B0065B368 /* SaliencyService.swift */; };
 		18C90E5928E705B30065B368 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5828E705B30065B368 /* DetailsViewController.swift */; };
 		18C90E5B28E705C50065B368 /* DetailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5A28E705C50065B368 /* DetailsPresenter.swift */; };
+		18C90E5F28E7338F0065B368 /* AnimatableContentModeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5E28E7338F0065B368 /* AnimatableContentModeImageView.swift */; };
 		4FFE91E19F8F8AFE1D43A7E7 /* Pods_PhotosAssessment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F75BA8A540AAF6FB3D11E080 /* Pods_PhotosAssessment.framework */; };
 		F896225218F2D638ED241604 /* Pods_PhotosAssessmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765263E527586CA1B715575E /* Pods_PhotosAssessmentTests.framework */; };
 /* End PBXBuildFile section */
@@ -76,6 +77,7 @@
 		18C90E5528E7054B0065B368 /* SaliencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaliencyService.swift; sourceTree = "<group>"; };
 		18C90E5828E705B30065B368 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		18C90E5A28E705C50065B368 /* DetailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsPresenter.swift; sourceTree = "<group>"; };
+		18C90E5E28E7338F0065B368 /* AnimatableContentModeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableContentModeImageView.swift; sourceTree = "<group>"; };
 		230E3756112219B62C2EC779 /* Pods-PhotosAssessmentTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotosAssessmentTests.release.xcconfig"; path = "Target Support Files/Pods-PhotosAssessmentTests/Pods-PhotosAssessmentTests.release.xcconfig"; sourceTree = "<group>"; };
 		69727822E9B3DE47A6203562 /* Pods-PhotosAssessment-PhotosAssessmentUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotosAssessment-PhotosAssessmentUITests.debug.xcconfig"; path = "Target Support Files/Pods-PhotosAssessment-PhotosAssessmentUITests/Pods-PhotosAssessment-PhotosAssessmentUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		765263E527586CA1B715575E /* Pods_PhotosAssessmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotosAssessmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,6 +142,7 @@
 		1814E92828E4946A00B1FCBF /* PhotosAssessment */ = {
 			isa = PBXGroup;
 			children = (
+				18C90E6028E73B870065B368 /* Views */,
 				1857631A28E5971700BC3FF6 /* Services */,
 				1857631528E4C52D00BC3FF6 /* Models */,
 				1814E95C28E4994E00B1FCBF /* Utilities */,
@@ -250,6 +253,14 @@
 				18C90E5A28E705C50065B368 /* DetailsPresenter.swift */,
 			);
 			path = Details;
+			sourceTree = "<group>";
+		};
+		18C90E6028E73B870065B368 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				18C90E5E28E7338F0065B368 /* AnimatableContentModeImageView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		7F253271E836C5AAADA45C33 /* Frameworks */ = {
@@ -516,6 +527,7 @@
 			files = (
 				18C90E5428E6E7C20065B368 /* UIView+Ext.swift in Sources */,
 				1814E92A28E4946A00B1FCBF /* AppDelegate.swift in Sources */,
+				18C90E5F28E7338F0065B368 /* AnimatableContentModeImageView.swift in Sources */,
 				18C90E5B28E705C50065B368 /* DetailsPresenter.swift in Sources */,
 				1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */,
 				1814E92C28E4946A00B1FCBF /* SceneDelegate.swift in Sources */,

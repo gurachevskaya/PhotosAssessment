@@ -9,6 +9,13 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     var presenter: DetailsPresenterProtocol!
+    
+    private lazy var imageView: AnimatableContentModeImageView = {
+        let imageView = AnimatableContentModeImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +25,7 @@ class DetailsViewController: UIViewController {
     
     private func config() {
         configureViewController()
+        setupImageView()
     }
     
     private func configureViewController() {
@@ -34,7 +42,28 @@ class DetailsViewController: UIViewController {
         navigationItem.rightBarButtonItems = [toggle]
     }
     
+    private func setupImageView() {
+        view.addSubview(imageView)
+        imageView.prepareForAutoLayout()
+        imageView.pinEdgesToSafeArea(in: view)
+    }
+    
     @objc
     private func toggleContentMode() {
+        animateImage()
+    }
+    
+    func animateImage() {
+        let contentMode: UIView.ContentMode = imageView.contentMode == .scaleAspectFill ? .scaleAspectFit : .scaleAspectFill
+        UIView.animate(withDuration: 0.6) {
+            self.imageView.contentMode = contentMode
+        }
+    }
+
+}
+
+extension DetailsViewController: DetailsPresenterDelegate {
+    func setupInitialState(image: UIImage?) {
+        imageView.image = image
     }
 }

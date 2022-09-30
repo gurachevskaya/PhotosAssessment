@@ -18,4 +18,11 @@ extension UIView {
         self.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding).isActive = true
         self.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding).isActive = true
     }
+    
+    func pinEdgesToSafeArea(in view: UIView, padding: CGFloat = 0) {
+        self.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding).isActive = true
+        self.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -padding).isActive = true
+        self.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding).isActive = true
+        self.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding).isActive = true
+    }
 }

@@ -41,7 +41,6 @@ final class SaliencyService: SaliencyServiceProtocol {
         do {
             try handler.perform([request])
         } catch let error {
-            print(error)
             throw SaliencyServiceError.requestPerform
         }
         

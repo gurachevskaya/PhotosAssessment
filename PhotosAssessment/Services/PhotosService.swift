@@ -101,6 +101,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
         options.isNetworkAccessAllowed = true
+        options.isSynchronous = true
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.imageCachingManager.requestImage(
@@ -113,13 +114,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
                         continuation.resume(throwing: error)
                         return
                     }
-                    
-                    let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
-                    if isDegraded {
-                        return
-                    }
-  
-                    continuation.resume(returning: image ?? UIImage())
+                    continuation.resume(returning: image)
                 }
             )
         }
@@ -145,7 +140,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         fetchOptions.sortDescriptors = [
             NSSortDescriptor(key: Constants.Keys.creationDate, ascending: false)
         ]
-//        fetchOptions.fetchLimit = Constants.maxNumberOfPhotos
+        fetchOptions.fetchLimit = Constants.maxNumberOfPhotos
         
         results.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
         

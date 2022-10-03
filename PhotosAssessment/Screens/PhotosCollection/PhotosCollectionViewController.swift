@@ -7,6 +7,13 @@
 
 import UIKit
 
+extension PhotosCollectionViewController {
+    enum ViewConstants {
+        static let numberOfColumns = 4
+        static let collectionItemsSpacing: CGFloat = 5
+    }
+}
+
 class PhotosCollectionViewController: UIViewController {
     var presenter: PhotosCollectionPresenterProtocol!
 
@@ -21,26 +28,24 @@ class PhotosCollectionViewController: UIViewController {
     
     private lazy var collectionLayout: UICollectionViewCompositionalLayout = {
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1 / 4),
+            widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalWidth(1 / 4)
+            heightDimension: .fractionalWidth(1 / CGFloat(ViewConstants.numberOfColumns))
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
             subitem: item,
-            count: 4
+            count: ViewConstants.numberOfColumns
         )
+        group.interItemSpacing = .fixed(ViewConstants.collectionItemsSpacing)
         
         let section = NSCollectionLayoutSection(group: group)
-
-        let spacing: CGFloat = 5
-        group.interItemSpacing = .fixed(spacing)
-        section.interGroupSpacing = spacing
+        section.interGroupSpacing = ViewConstants.collectionItemsSpacing
 
         let layout = UICollectionViewCompositionalLayout(section: section)
         

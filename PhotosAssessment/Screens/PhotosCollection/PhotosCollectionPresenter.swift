@@ -44,21 +44,10 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         loadPhotos()
     }
     
-    private func loadPhotos() {
-        Task {
-            do {
-                let photos = try await photosService.requestAuthorization()
-                let mapped = photos?.map { PhotoAsset(name: $0.localIdentifier) }
-                guard let mapped = mapped else { return }
-                await updateData(on: mapped)
-            } catch let error as PhotosServiceError {
-                await delegate?.didFailWithError(error.errorDescription)
-            }
-        }
-    }
-    
     func startCachingAssets(indexPaths: [IndexPath]) {
-        photosService.startCachingAssets(indexPaths: indexPaths)
+        guard let model = model else { return }
+        let assets = model.map { $0.asset }
+        photosService.startCachingAssets(assets: assets)
     }
     
     func fetchImage(id: PHAssetLocalIdentifier) async throws -> UIImage? {
@@ -80,6 +69,19 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         
         return destinationController
     }
+    
+    private func loadPhotos() {
+        Task {
+            do {
+                let photos = try await photosService.requestAuthorization()
+                let mapped = photos?.map { PhotoAsset(asset: $0, name: $0.localIdentifier) }
+                guard let mapped = mapped else { return }
+                await updateData(on: mapped)
+            } catch let error as PhotosServiceError {
+                await delegate?.didFailWithError(error.errorDescription)
+            }
+        }
+    }
 
     @MainActor
     private func updateData(on model: [PhotoAsset]) {
@@ -91,9 +93,11 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
 }
 
+// MARK: - PhotosServiceDelegate
+
 extension PhotosCollectionPresenter: PhotosServiceDelegate {
     func photoLibraryDidChange(results: PHFetchResultCollection) {
-        let mapped = results.map { PhotoAsset(name: $0.localIdentifier) }
+        let mapped = results.map { PhotoAsset(asset: $0, name: $0.localIdentifier) }
         DispatchQueue.main.async { [weak self] in
             self?.updateData(on: mapped)
         }

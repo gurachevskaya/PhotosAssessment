@@ -20,14 +20,21 @@ class PhotosCollectionViewController: UIViewController {
     }()
     
     private lazy var collectionLayout: UICollectionViewCompositionalLayout = {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1 / 4),
-                                             heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1 / 4),
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalWidth(1 / 4))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                       subitem: item, count: 4)
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalWidth(1 / 4)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: groupSize,
+            subitem: item,
+            count: 4
+        )
         
         let section = NSCollectionLayoutSection(group: group)
 
@@ -64,7 +71,9 @@ class PhotosCollectionViewController: UIViewController {
     }
     
     private func setupDataSouce() {
-        presenter.dataSource = .init(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, asset -> UICollectionViewCell? in
+        presenter.dataSource = .init(
+            collectionView: collectionView,
+            cellProvider: { [weak self] collectionView, indexPath, asset -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.reuseID, for: indexPath) as! PhotoCollectionViewCell
            
             let imageLoadingTask = Task {
@@ -83,6 +92,8 @@ class PhotosCollectionViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
 extension PhotosCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let asset = presenter.model?[indexPath.item] else {
@@ -94,11 +105,15 @@ extension PhotosCollectionViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - UICollectionViewDataSourcePrefetching
+
 extension PhotosCollectionViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         presenter.startCachingAssets(indexPaths: indexPaths)
     }
 }
+
+// MARK: - PhotosCollectionPresenterDelegate
 
 extension PhotosCollectionViewController: PhotosCollectionPresenterDelegate {
     func didLoadPhotos() {

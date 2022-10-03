@@ -39,7 +39,7 @@ class DetailsPresenter: DetailsPresenterProtocol {
     func viewIsReady() {
         loadImage()
     }
-    
+        
     private func loadImage() {
         guard let asset = asset else { return }
 
@@ -47,7 +47,8 @@ class DetailsPresenter: DetailsPresenterProtocol {
             let image = try? await photosService.fetchImage(
                 byLocalIdentifier: asset.name,
                 targetSize: PHImageManagerMaximumSize,
-                contentMode: .aspectFit)
+                contentMode: .aspectFit
+            )
             await delegate?.setupInitialState(image: image)
             
             drawSaliencyRectangle(for: image)
@@ -58,7 +59,10 @@ class DetailsPresenter: DetailsPresenterProtocol {
         guard let image = image else { return }
         
         Task.detached(priority: .userInitiated) {
-            if let rect = try? self.saliencyService.getSaliencyRectangle(for: image, saliencyType: .attentionBased) {
+            if let rect = try? self.saliencyService.getSaliencyRectangle(
+                for: image,
+                saliencyType: .attentionBased
+            ) {
                 await self.delegate?.drawRectangle(rect)
             }
         }

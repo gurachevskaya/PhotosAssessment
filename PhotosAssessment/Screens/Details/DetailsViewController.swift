@@ -16,16 +16,23 @@ class DetailsViewController: UIViewController {
         imageView.clipsToBounds = true
         return imageView
     }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         config()
         presenter.viewIsReady()
     }
-    
+
     private func config() {
         configureViewController()
         setupImageView()
+        setupActivityIndicatorView()
     }
     
     private func configureViewController() {
@@ -33,12 +40,26 @@ class DetailsViewController: UIViewController {
         configNavigationBar()
     }
     
+    private func setupActivityIndicatorView() {
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+
+        activityIndicator.prepareForAutoLayout()
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
     private func configNavigationBar() {
         navigationController?.navigationBar.tintColor = .label
         
         navigationController?.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         
-        let toggle = UIBarButtonItem(image: UIImage(systemName: "arrow.up.left.and.down.right.magnifyingglass"), style: .plain, target: self, action: #selector(toggleContentMode))
+        let toggle = UIBarButtonItem(
+            image: SFSymbols.magnifyingGlass,
+            style: .plain,
+            target: self,
+            action: #selector(toggleContentMode)
+        )
         navigationItem.rightBarButtonItems = [toggle]
     }
     
@@ -59,11 +80,13 @@ class DetailsViewController: UIViewController {
             self.imageView.contentMode = contentMode
         }
     }
-
 }
+
+// MARK: - DetailsPresenterDelegate
 
 extension DetailsViewController: DetailsPresenterDelegate {
     func setupInitialState(image: UIImage?) {
+        activityIndicator.stopAnimating()
         imageView.image = image
     }
     

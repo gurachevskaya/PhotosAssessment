@@ -15,11 +15,17 @@ enum SaliencyServiceError: LocalizedError {
 }
 
 protocol SaliencyServiceProtocol: AnyObject {
-    func getSaliencyRectangle(for image: UIImage, saliencyType: SaliencyType) throws -> CGRect?
+    func getSaliencyRectangle(
+        for image: UIImage,
+        saliencyType: SaliencyType
+    ) throws -> CGRect?
 }
 
 final class SaliencyService: SaliencyServiceProtocol {
-    func getSaliencyRectangle(for image: UIImage, saliencyType: SaliencyType) throws -> CGRect?  {
+    func getSaliencyRectangle(
+        for image: UIImage,
+        saliencyType: SaliencyType
+    ) throws -> CGRect?  {
         guard let cgImage = image.cgImage else {
             throw SaliencyServiceError.imageConverting
         }
@@ -40,7 +46,7 @@ final class SaliencyService: SaliencyServiceProtocol {
         
         do {
             try handler.perform([request])
-        } catch let error {
+        } catch {
             throw SaliencyServiceError.requestPerform
         }
         

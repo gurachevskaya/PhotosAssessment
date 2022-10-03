@@ -33,7 +33,7 @@ protocol PhotosServiceProtocol: AnyObject {
         contentMode: PHImageContentMode
     ) async throws -> UIImage?
     
-    func startCachingAssets(indexPaths: [IndexPath])
+    func startCachingAssets(assets: [PHAsset])
 }
 
 protocol PhotosServiceDelegate: AnyObject {
@@ -43,13 +43,13 @@ protocol PhotosServiceDelegate: AnyObject {
 typealias PHAssetLocalIdentifier = String
 
 final class PhotosService: NSObject, PhotosServiceProtocol {
-
+    
     private var imageCachingManager: PHCachingImageManager
-
+    
     init(imageCachingManager: PHCachingImageManager) {
         self.imageCachingManager = imageCachingManager
         super.init()
-
+        
         registerObserver()
     }
     
@@ -57,7 +57,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     
     var authorizationStatus: PHAuthorizationStatus = .notDetermined
     var results = PHFetchResultCollection(fetchResult: .init())
-        
+    
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -91,8 +91,10 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         let fetchOptions = PHFetchOptions()
         fetchOptions.includeHiddenAssets = false
         fetchOptions.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: true)
+            NSSortDescriptor(key: Constants.Keys.creationDate, ascending: false)
         ]
+//        fetchOptions.fetchLimit = Constants.maxNumberOfPhotos
+        
         results.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
         
         return results
@@ -112,9 +114,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         }
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
-        options.resizeMode = .fast
         options.isNetworkAccessAllowed = true
-        options.isSynchronous = true
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.imageCachingManager.requestImage(
@@ -127,20 +127,25 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
                         continuation.resume(throwing: error)
                         return
                     }
-                    continuation.resume(returning: image)
+                    
+                    let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
+                    if isDegraded {
+                        return
+                    }
+  
+                    continuation.resume(returning: image ?? UIImage())
                 }
             )
         }
     }
     
-    func startCachingAssets(indexPaths: [IndexPath]) {
-        var assets: [PHAsset] = []
-        for indexPath in indexPaths {
-            let asset = results.fetchResult[indexPath.item]
-            assets.append(asset)
-        }
-        
-        imageCachingManager.startCachingImages(for: assets, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: nil)
+    func startCachingAssets(assets: [PHAsset]) {
+        imageCachingManager.startCachingImages(
+            for: assets,
+            targetSize: CGSize(width: 200, height: 200),
+            contentMode: .aspectFill,
+            options: nil
+        )
     }
     
     func resetCachedAssets() {

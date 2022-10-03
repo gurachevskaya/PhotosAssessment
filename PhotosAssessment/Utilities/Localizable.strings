@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  PhotosAssessment
+
+  Created by Karina gurachevskaya on 3.10.22.
+  
+*/
+
+"RECENTS" = "Recents";
+
+// MARK: Errors
+
+"ERROR_ACCESS_RESTRICTED" = "Access restricted";
+"ERROR_ASSET_NOT_FOUND" = "Asset not found";
+

@@ -66,7 +66,7 @@ class PhotosCollectionViewController: UIViewController {
     
     private func configureViewController() {
         view.backgroundColor = .systemBackground
-        title = "Recents"
+        title = NSLocalizedString("RECENTS", comment: "")
     }
     
     private func setupCollectionView() {

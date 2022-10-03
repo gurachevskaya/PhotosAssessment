@@ -8,7 +8,7 @@
 import UIKit
 import Vision
 
-enum SaliencyServiceError: LocalizedError {
+enum SaliencyServiceError: Error {
     case imageConverting
     case requestPerform
     case noSaliencyResults

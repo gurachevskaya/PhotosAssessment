@@ -15,9 +15,9 @@ enum PhotosServiceError: LocalizedError {
     var errorDescription: String {
         switch self {
         case .restrictedAccess:
-            return "Access restricted"
+            return NSLocalizedString("ERROR_ACCESS_RESTRICTED", comment: "")
         case .phAssetNotFound:
-            return "Asset not found"
+            return NSLocalizedString("ERROR_ASSET_NOT_FOUND", comment: "")
         }
     }
 }

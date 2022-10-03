@@ -59,10 +59,25 @@ final class SaliencyService: SaliencyServiceProtocol {
             throw SaliencyServiceError.noSaliencyResults
         }
         
-        let salientRect = VNImageRectForNormalizedRect(
-            object.boundingBox,
-            Int(image.size.width),
-            Int(image.size.height)
+        let imageSize = CGSize(
+            width: image.size.width,
+            height: image.size.height
+        )
+        
+        let boundingBox = object.boundingBox
+
+        let origin = CGPoint(
+            x: boundingBox.origin.x * imageSize.width,
+            y: imageSize.height - boundingBox.origin.y * imageSize.height
+        )
+        let size = CGSize(
+            width: boundingBox.width * imageSize.width,
+            height: -(boundingBox.height * imageSize.height)
+        )
+
+        let salientRect = CGRect(
+            origin: origin,
+            size: size
         )
         
         return salientRect

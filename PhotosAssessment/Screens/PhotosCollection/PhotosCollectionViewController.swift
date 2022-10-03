@@ -7,6 +7,13 @@
 
 import UIKit
 
+extension PhotosCollectionViewController {
+    enum ViewConstants {
+        static let numberOfColumns = 4
+        static let collectionItemsSpacing: CGFloat = 5
+    }
+}
+
 class PhotosCollectionViewController: UIViewController {
     var presenter: PhotosCollectionPresenterProtocol!
 
@@ -20,20 +27,25 @@ class PhotosCollectionViewController: UIViewController {
     }()
     
     private lazy var collectionLayout: UICollectionViewCompositionalLayout = {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1 / 4),
-                                             heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalWidth(1 / 4))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                       subitem: item, count: 4)
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalWidth(1 / CGFloat(ViewConstants.numberOfColumns))
+        )
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: groupSize,
+            subitem: item,
+            count: ViewConstants.numberOfColumns
+        )
+        group.interItemSpacing = .fixed(ViewConstants.collectionItemsSpacing)
         
         let section = NSCollectionLayoutSection(group: group)
-
-        let spacing: CGFloat = 5
-        group.interItemSpacing = .fixed(spacing)
-        section.interGroupSpacing = spacing
+        section.interGroupSpacing = ViewConstants.collectionItemsSpacing
 
         let layout = UICollectionViewCompositionalLayout(section: section)
         
@@ -64,7 +76,9 @@ class PhotosCollectionViewController: UIViewController {
     }
     
     private func setupDataSouce() {
-        presenter.dataSource = .init(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, asset -> UICollectionViewCell? in
+        presenter.dataSource = .init(
+            collectionView: collectionView,
+            cellProvider: { [weak self] collectionView, indexPath, asset -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.reuseID, for: indexPath) as! PhotoCollectionViewCell
            
             let imageLoadingTask = Task {
@@ -83,26 +97,28 @@ class PhotosCollectionViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
 extension PhotosCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let asset = presenter.model?[indexPath.item] else {
             return
         }
-        
-        print(asset)
-        
-//        let destVC = DetailsVC()
-//        destVC.delegate = self
-//        destVC.asset = asset
-//        present(destVC, animated: true)
+                
+        let destination = presenter.obtainDetailsViewController(asset: asset)
+        navigationController?.pushViewController(destination, animated: true)
     }
 }
+
+// MARK: - UICollectionViewDataSourcePrefetching
 
 extension PhotosCollectionViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         presenter.startCachingAssets(indexPaths: indexPaths)
     }
 }
+
+// MARK: - PhotosCollectionPresenterDelegate
 
 extension PhotosCollectionViewController: PhotosCollectionPresenterDelegate {
     func didLoadPhotos() {

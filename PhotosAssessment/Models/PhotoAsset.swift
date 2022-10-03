@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import Photos
 
 struct PhotoAsset: Hashable {
+    let asset: PHAsset
     let name: String
 }

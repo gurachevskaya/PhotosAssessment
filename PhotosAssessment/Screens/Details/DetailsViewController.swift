@@ -66,4 +66,22 @@ extension DetailsViewController: DetailsPresenterDelegate {
     func setupInitialState(image: UIImage?) {
         imageView.image = image
     }
+    
+    func drawRectangle(_ rect: CGRect) {
+        guard let image = imageView.image else { return }
+
+        UIGraphicsBeginImageContext(image.size)
+        
+        let context = UIGraphicsGetCurrentContext()
+        image.draw(at: CGPoint.zero)
+        context?.setStrokeColor(UIColor.red.cgColor)
+        context?.stroke(rect, width: 20)
+        let imageWithRect = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+
+        guard let imageWithRect = imageWithRect else { return }
+        
+        imageView.image = imageWithRect
+    }
 }

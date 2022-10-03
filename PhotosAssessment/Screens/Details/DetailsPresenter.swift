@@ -16,14 +16,20 @@ protocol DetailsPresenterProtocol {
 }
 
 protocol DetailsPresenterDelegate: AnyObject {
-    func setupInitialState(image: UIImage?)
+    @MainActor func setupInitialState(image: UIImage?)
+    @MainActor func drawRectangle(_ rect: CGRect)
 }
 
 class DetailsPresenter: DetailsPresenterProtocol {
     private var photosService: PhotosServiceProtocol
-
-    init(photosService: PhotosServiceProtocol) {
+    private var saliencyService: SaliencyServiceProtocol
+    
+    init(
+        photosService: PhotosServiceProtocol,
+        saliencyService: SaliencyServiceProtocol
+    ) {
         self.photosService = photosService
+        self.saliencyService = saliencyService
     }
     
     weak var delegate: DetailsPresenterDelegate?
@@ -38,9 +44,19 @@ class DetailsPresenter: DetailsPresenterProtocol {
                 byLocalIdentifier: asset.name,
                 targetSize: PHImageManagerMaximumSize,
                 contentMode: .aspectFit)
-            DispatchQueue.main.async { [weak self] in
-                self?.delegate?.setupInitialState(image: image)
+            await delegate?.setupInitialState(image: image)
+            
+            do {
+                if let rect = try saliencyService.getSaliencyRectangle(for: image ?? UIImage(), saliencyType: .attentionBased) {
+                    await delegate?.drawRectangle(rect)
+                }
+            } catch let error {
+                print(error)
             }
         }
+    }
+    
+    func drawSaliencyRectangle() {
+        
     }
 }

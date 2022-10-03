@@ -20,20 +20,20 @@ protocol PhotosCollectionPresenterProtocol {
 }
 
 protocol PhotosCollectionPresenterDelegate: AnyObject {
-    func didLoadPhotos()
-    func didFailWithError(_ error: String)
+    @MainActor func didLoadPhotos()
+    @MainActor func didFailWithError(_ error: String)
 }
 
 class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     private var photosService: PhotosServiceProtocol
-
+    
     init(photosService: PhotosServiceProtocol) {
         self.photosService = photosService
     }
     
     weak var delegate: PhotosCollectionPresenterDelegate?
-        
+    
     var model: [PhotoAsset]?
     
     var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PhotoAsset>!
@@ -50,16 +50,9 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
                 let photos = try await photosService.requestAuthorization()
                 let mapped = photos?.map { PhotoAsset(name: $0.localIdentifier) }
                 guard let mapped = mapped else { return }
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.updateData(on: mapped)
-                }
+                await updateData(on: mapped)
             } catch let error as PhotosServiceError {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    let mappedError = self.mapError(error: error)
-                    self.delegate?.didFailWithError(mappedError)
-                }
+                await delegate?.didFailWithError(error.errorDescription)
             }
         }
     }
@@ -80,23 +73,15 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         let destinationController = DetailsViewController()
         let destinationPresenter = DetailsPresenter(photosService: PhotosService(
             imageCachingManager: PHCachingImageManager()
-        ))
+        ), saliencyService: SaliencyService())
         destinationController.presenter = destinationPresenter
         destinationPresenter.asset = asset
         destinationPresenter.delegate = destinationController
         
         return destinationController
     }
-    
-    private func mapError(error: PhotosServiceError) -> String {
-        switch error {
-        case .restrictedAccess:
-            return "Access restricted"
-        case .phAssetNotFound:
-            return "Asset not found"
-        }
-    }
-        
+
+    @MainActor
     private func updateData(on model: [PhotoAsset]) {
         self.model = model
         var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PhotoAsset>()

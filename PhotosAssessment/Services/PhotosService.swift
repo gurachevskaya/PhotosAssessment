@@ -8,9 +8,18 @@
 import UIKit
 import Photos
 
-enum PhotosServiceError: Error {
+enum PhotosServiceError: LocalizedError {
     case restrictedAccess
     case phAssetNotFound
+    
+    var errorDescription: String {
+        switch self {
+        case .restrictedAccess:
+            return "Access restricted"
+        case .phAssetNotFound:
+            return "Asset not found"
+        }
+    }
 }
 
 protocol PhotosServiceProtocol: AnyObject {
@@ -33,13 +42,14 @@ protocol PhotosServiceDelegate: AnyObject {
 
 typealias PHAssetLocalIdentifier = String
 
-class PhotosService: NSObject, PhotosServiceProtocol {
+final class PhotosService: NSObject, PhotosServiceProtocol {
+
     private var imageCachingManager: PHCachingImageManager
 
     init(imageCachingManager: PHCachingImageManager) {
         self.imageCachingManager = imageCachingManager
         super.init()
-        
+
         registerObserver()
     }
     

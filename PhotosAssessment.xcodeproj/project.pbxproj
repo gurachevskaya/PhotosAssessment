@@ -22,7 +22,6 @@
 		1857631428E4C14400BC3FF6 /* PhotosCollectionSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631328E4C14400BC3FF6 /* PhotosCollectionSection.swift */; };
 		1857631928E4C59A00BC3FF6 /* PhotoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631828E4C59A00BC3FF6 /* PhotoAsset.swift */; };
 		1857631C28E5972700BC3FF6 /* PhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631B28E5972700BC3FF6 /* PhotosService.swift */; };
-		1857631F28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */; };
 		1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */; };
 		18C90E5428E6E7C20065B368 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5328E6E7C20065B368 /* UIView+Ext.swift */; };
 		18C90E5628E7054B0065B368 /* SaliencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C90E5528E7054B0065B368 /* SaliencyService.swift */; };
@@ -71,7 +70,6 @@
 		1857631328E4C14400BC3FF6 /* PhotosCollectionSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionSection.swift; sourceTree = "<group>"; };
 		1857631828E4C59A00BC3FF6 /* PhotoAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAsset.swift; sourceTree = "<group>"; };
 		1857631B28E5972700BC3FF6 /* PhotosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosService.swift; sourceTree = "<group>"; };
-		1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHFetchResultCollection+Ext.swift"; sourceTree = "<group>"; };
 		1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		18C90E5328E6E7C20065B368 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		18C90E5528E7054B0065B368 /* SaliencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaliencyService.swift; sourceTree = "<group>"; };
@@ -242,7 +240,6 @@
 		1857631D28E59FEC00BC3FF6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				1857631E28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift */,
 				1857632428E5FE7E00BC3FF6 /* UIViewController+Ext.swift */,
 				18C90E5328E6E7C20065B368 /* UIView+Ext.swift */,
 			);
@@ -542,7 +539,6 @@
 				1857631428E4C14400BC3FF6 /* PhotosCollectionSection.swift in Sources */,
 				1857630F28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift in Sources */,
 				18C90E5928E705B30065B368 /* DetailsViewController.swift in Sources */,
-				1857631F28E59FFF00BC3FF6 /* PHFetchResultCollection+Ext.swift in Sources */,
 				18C90E5628E7054B0065B368 /* SaliencyService.swift in Sources */,
 				18C90E6428EAE8CF0065B368 /* Constants.swift in Sources */,
 			);

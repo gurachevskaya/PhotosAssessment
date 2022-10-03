@@ -25,7 +25,7 @@ enum PhotosServiceError: LocalizedError {
 protocol PhotosServiceProtocol: AnyObject {
     var delegate: PhotosServiceDelegate? { get set }
     
-    func fetchPhotos() async throws -> PHFetchResultCollection?
+    func fetchPhotos() async throws -> PHFetchResult<PHAsset>?
     
     func fetchImage(
         byLocalIdentifier localId: PHAssetLocalIdentifier,
@@ -37,7 +37,7 @@ protocol PhotosServiceProtocol: AnyObject {
 }
 
 protocol PhotosServiceDelegate: AnyObject {
-    func photoLibraryDidChange(results: PHFetchResultCollection)
+    func photoLibraryDidChange(results: PHFetchResult<PHAsset>)
 }
 
 typealias PHAssetLocalIdentifier = String
@@ -56,7 +56,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     weak var delegate: PhotosServiceDelegate?
     
     var authorizationStatus: PHAuthorizationStatus = .notDetermined
-    var results = PHFetchResultCollection(fetchResult: .init())
+    var results = PHFetchResult<PHAsset>()
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
@@ -66,7 +66,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         PHPhotoLibrary.shared().register(self)
     }
     
-    func fetchPhotos() async throws -> PHFetchResultCollection? {
+    func fetchPhotos() async throws -> PHFetchResult<PHAsset>? {
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             PHPhotoLibrary.requestAuthorization { [weak self] status in
                 self?.authorizationStatus = status
@@ -133,7 +133,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         imageCachingManager.stopCachingImagesForAllAssets()
     }
     
-    private func fetchAllPhotos() -> PHFetchResultCollection {
+    private func fetchAllPhotos() -> PHFetchResult<PHAsset> {
         imageCachingManager.allowsCachingHighQualityImages = false
         let fetchOptions = PHFetchOptions()
         fetchOptions.includeHiddenAssets = false
@@ -141,17 +141,17 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
             NSSortDescriptor(key: Constants.Keys.creationDate, ascending: false)
         ]
         fetchOptions.fetchLimit = Constants.maxNumberOfPhotos
-        
-        results.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
+                
+        results = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+                
         return results
     }
 }
 
 extension PhotosService: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        if let change = changeInstance.changeDetails(for: results.fetchResult) {
-            results.fetchResult = change.fetchResultAfterChanges
+        if let change = changeInstance.changeDetails(for: results) {
+            results = change.fetchResultAfterChanges
             delegate?.photoLibraryDidChange(results: results)
         }
     }

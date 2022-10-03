@@ -82,7 +82,7 @@ class PhotosCollectionViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.reuseID, for: indexPath) as! PhotoCollectionViewCell
            
             let imageLoadingTask = Task {
-                let image = try? await self?.presenter.fetchImage(id: asset.name)
+                let image = try? await self?.presenter.fetchImage(id: asset.localIdentifier)
                 if !Task.isCancelled {
                     cell.setupWith(cellModel: .init(image: image))
                 }

@@ -9,14 +9,14 @@ import UIKit
 import Photos
 
 protocol PhotosCollectionPresenterProtocol {
-    var model: [PhotoAsset]? { get }
+    var model: PHFetchResult<PHAsset>? { get }
     var delegate: PhotosCollectionPresenterDelegate? { get set }
-    var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PhotoAsset>! { get set }
+    var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PHAsset>! { get set }
     
     func viewIsReady()
     func fetchImage(id: PHAssetLocalIdentifier) async throws -> UIImage?
     func startCachingAssets(indexPaths: [IndexPath])
-    func obtainDetailsViewController(asset: PhotoAsset) -> UIViewController
+    func obtainDetailsViewController(asset: PHAsset) -> UIViewController
 }
 
 protocol PhotosCollectionPresenterDelegate: AnyObject {
@@ -34,10 +34,10 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     weak var delegate: PhotosCollectionPresenterDelegate?
     
-    var model: [PhotoAsset]?
+    var model: PHFetchResult<PHAsset>?
     
-    var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PhotoAsset>!
-    var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PhotoAsset>()
+    var dataSource: UICollectionViewDiffableDataSource<PhotosCollectionSection, PHAsset>!
+    var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PHAsset>()
     
     func viewIsReady() {
         photosService.delegate = self
@@ -46,7 +46,9 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     func startCachingAssets(indexPaths: [IndexPath]) {
         guard let model = model else { return }
-        let assets = model.map { $0.asset }
+        let assets = indexPaths.map { indexPath in
+            model[indexPath.item]
+        }
         photosService.startCachingAssets(assets: assets)
     }
     
@@ -58,7 +60,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
         )
     }
     
-    func obtainDetailsViewController(asset: PhotoAsset) -> UIViewController {
+    func obtainDetailsViewController(asset: PHAsset) -> UIViewController {
         let destinationController = DetailsViewController()
         let destinationPresenter = DetailsPresenter(photosService: PhotosService(
             imageCachingManager: PHCachingImageManager()
@@ -73,10 +75,10 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     private func loadPhotos() {
         Task {
             do {
-                let photos = try await photosService.fetchPhotos()
-                let mapped = photos?.map { PhotoAsset(asset: $0, name: $0.localIdentifier) }
-                guard let mapped = mapped else { return }
-                await updateData(on: mapped)
+                guard let photos = try await photosService.fetchPhotos() else {
+                    return
+                }
+                await updateData(on: photos)
             } catch let error as PhotosServiceError {
                 await delegate?.didFailWithError(error.errorDescription)
             }
@@ -84,11 +86,18 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
 
     @MainActor
-    private func updateData(on model: [PhotoAsset]) {
+    private func updateData(on model: PHFetchResult<PHAsset>) {
         self.model = model
-        var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PhotoAsset>()
+        var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PHAsset>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(model)
+        
+        var assets: [PHAsset] = []
+        model.enumerateObjects { (collection, _, _) in
+            assets.append(collection)
+        }
+        
+        snapshot.appendItems(assets)
+        
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
@@ -96,10 +105,9 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
 // MARK: - PhotosServiceDelegate
 
 extension PhotosCollectionPresenter: PhotosServiceDelegate {
-    func photoLibraryDidChange(results: PHFetchResultCollection) {
-        let mapped = results.map { PhotoAsset(asset: $0, name: $0.localIdentifier) }
+    func photoLibraryDidChange(results: PHFetchResult<PHAsset>) {
         DispatchQueue.main.async { [weak self] in
-            self?.updateData(on: mapped)
+            self?.updateData(on: results)
         }
     }
 }

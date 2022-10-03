@@ -9,7 +9,7 @@ import UIKit
 import Photos
 
 protocol DetailsPresenterProtocol {
-    var asset: PhotoAsset? { get }
+    var asset: PHAsset? { get }
     var delegate: DetailsPresenterDelegate? { get set }
     
     func viewIsReady()
@@ -34,7 +34,7 @@ class DetailsPresenter: DetailsPresenterProtocol {
     
     weak var delegate: DetailsPresenterDelegate?
     
-    var asset: PhotoAsset?
+    var asset: PHAsset?
     
     func viewIsReady() {
         loadImage()
@@ -45,7 +45,7 @@ class DetailsPresenter: DetailsPresenterProtocol {
 
         Task {
             let image = try? await photosService.fetchImage(
-                byLocalIdentifier: asset.name,
+                byLocalIdentifier: asset.localIdentifier,
                 targetSize: PHImageManagerMaximumSize,
                 contentMode: .aspectFit
             )

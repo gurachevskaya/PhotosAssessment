@@ -25,7 +25,7 @@ enum PhotosServiceError: LocalizedError {
 protocol PhotosServiceProtocol: AnyObject {
     var delegate: PhotosServiceDelegate? { get set }
     
-    func requestAuthorization() async throws -> PHFetchResultCollection?
+    func fetchPhotos() async throws -> PHFetchResultCollection?
     
     func fetchImage(
         byLocalIdentifier localId: PHAssetLocalIdentifier,
@@ -66,7 +66,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         PHPhotoLibrary.shared().register(self)
     }
     
-    func requestAuthorization() async throws -> PHFetchResultCollection? {
+    func fetchPhotos() async throws -> PHFetchResultCollection? {
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             PHPhotoLibrary.requestAuthorization { [weak self] status in
                 self?.authorizationStatus = status
@@ -85,25 +85,11 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
             }
         }
     }
-    
-    private func fetchAllPhotos() -> PHFetchResultCollection {
-        imageCachingManager.allowsCachingHighQualityImages = false
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.includeHiddenAssets = false
-        fetchOptions.sortDescriptors = [
-            NSSortDescriptor(key: Constants.Keys.creationDate, ascending: false)
-        ]
-//        fetchOptions.fetchLimit = Constants.maxNumberOfPhotos
-        
-        results.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
-        return results
-    }
-    
+   
     func fetchImage(
         byLocalIdentifier localId: PHAssetLocalIdentifier,
-        targetSize: CGSize = PHImageManagerMaximumSize,
-        contentMode: PHImageContentMode = .default
+        targetSize: CGSize,
+        contentMode: PHImageContentMode
     ) async throws -> UIImage? {
         let results = PHAsset.fetchAssets(
             withLocalIdentifiers: [localId],
@@ -150,6 +136,20 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     
     func resetCachedAssets() {
         imageCachingManager.stopCachingImagesForAllAssets()
+    }
+    
+    private func fetchAllPhotos() -> PHFetchResultCollection {
+        imageCachingManager.allowsCachingHighQualityImages = false
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.includeHiddenAssets = false
+        fetchOptions.sortDescriptors = [
+            NSSortDescriptor(key: Constants.Keys.creationDate, ascending: false)
+        ]
+//        fetchOptions.fetchLimit = Constants.maxNumberOfPhotos
+        
+        results.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+        
+        return results
     }
 }
 

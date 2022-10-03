@@ -73,7 +73,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     private func loadPhotos() {
         Task {
             do {
-                let photos = try await photosService.requestAuthorization()
+                let photos = try await photosService.fetchPhotos()
                 let mapped = photos?.map { PhotoAsset(asset: $0, name: $0.localIdentifier) }
                 guard let mapped = mapped else { return }
                 await updateData(on: mapped)

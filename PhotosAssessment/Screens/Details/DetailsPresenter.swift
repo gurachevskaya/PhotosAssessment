@@ -13,6 +13,7 @@ protocol DetailsPresenterProtocol {
     var delegate: DetailsPresenterDelegate? { get set }
     
     func viewIsReady()
+    func drawSaliencyRectangle(for image: UIImage?)
 }
 
 protocol DetailsPresenterDelegate: AnyObject {
@@ -72,7 +73,7 @@ class DetailsPresenter: DetailsPresenterProtocol {
         return image
     }
     
-    private func drawSaliencyRectangle(for image: UIImage?) {
+    func drawSaliencyRectangle(for image: UIImage?) {
         guard let image = image else { return }
         
         Task.detached(priority: .userInitiated) {

@@ -22,6 +22,8 @@ class DetailsViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         return activityIndicator
     }()
+    
+    private var originalImage: UIImage?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,14 +73,17 @@ class DetailsViewController: UIViewController {
     
     @objc
     private func toggleContentMode() {
-        animateImage()
-    }
-    
-    func animateImage() {
         let contentMode: UIView.ContentMode = imageView.contentMode == .scaleAspectFill ? .scaleAspectFit : .scaleAspectFill
+
+        let croppedImage = originalImage?.cropTo(view: imageView)
+        let image = contentMode == .scaleAspectFill ? croppedImage : originalImage
+        
         UIView.animate(withDuration: 0.6) {
             self.imageView.contentMode = contentMode
+            self.imageView.image = image
         }
+        
+        presenter.drawSaliencyRectangle(for: image)
     }
 }
 
@@ -87,6 +92,7 @@ class DetailsViewController: UIViewController {
 extension DetailsViewController: DetailsPresenterDelegate {
     func setupInitialState(image: UIImage?) {
         activityIndicator.stopAnimating()
+        originalImage = image
         imageView.image = image
     }
     
@@ -108,3 +114,5 @@ extension DetailsViewController: DetailsPresenterDelegate {
         imageView.image = imageWithRect
     }
 }
+
+

@@ -43,9 +43,6 @@ final class SaliencyService: SaliencyServiceProtocol {
         
         request.usesCPUOnly = true
         
-        // TODO: The region of the image in which the request will be performed
-//        request.regionOfInterest = CGRect(x: 0.1, y: 0, width: 0.8, height: 1)
-        
         do {
             try handler.perform([request])
         } catch {

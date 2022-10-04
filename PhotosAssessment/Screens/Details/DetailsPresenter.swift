@@ -32,6 +32,11 @@ class DetailsPresenter: DetailsPresenterProtocol {
         self.saliencyService = saliencyService
     }
     
+    private enum ImageQuality {
+        case low
+        case full
+    }
+    
     weak var delegate: DetailsPresenterDelegate?
     
     var asset: PHAsset?
@@ -44,15 +49,27 @@ class DetailsPresenter: DetailsPresenterProtocol {
         guard let asset = asset else { return }
 
         Task {
-            let image = try? await photosService.fetchImage(
-                byLocalIdentifier: asset.localIdentifier,
-                targetSize: PHImageManagerMaximumSize,
-                contentMode: .aspectFit
-            )
-            await delegate?.setupInitialState(image: image)
+            let lowQualityImage = await loadImage(asset: asset, imageQuality: .low)
+            await delegate?.setupInitialState(image: lowQualityImage)
             
-            drawSaliencyRectangle(for: image)
+            let fullQualityImage = await loadImage(asset: asset, imageQuality: .full)
+            await delegate?.setupInitialState(image: fullQualityImage)
+            
+            drawSaliencyRectangle(for: fullQualityImage)
         }
+    }
+    
+    private func loadImage(asset: PHAsset, imageQuality: ImageQuality) async -> UIImage? {
+        let lowQualityTargetSize = CGSize(width: 200, height: 200)
+        let targetSize = imageQuality == .full ? PHImageManagerMaximumSize : lowQualityTargetSize
+        
+        let image = try? await photosService.fetchImage(
+            byLocalIdentifier: asset.localIdentifier,
+            targetSize: targetSize,
+            contentMode: .aspectFit
+        )
+        
+        return image
     }
     
     private func drawSaliencyRectangle(for image: UIImage?) {

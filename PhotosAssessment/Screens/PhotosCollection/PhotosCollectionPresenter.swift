@@ -27,9 +27,14 @@ protocol PhotosCollectionPresenterDelegate: AnyObject {
 class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     private var photosService: PhotosServiceProtocol
+    private let eventsDelegateHandler: EventsDelegateHandler
     
-    init(photosService: PhotosServiceProtocol) {
+    init(
+        photosService: PhotosServiceProtocol,
+        eventsDelegateHandler: EventsDelegateHandler
+    ) {
         self.photosService = photosService
+        self.eventsDelegateHandler = eventsDelegateHandler
     }
     
     weak var delegate: PhotosCollectionPresenterDelegate?
@@ -40,7 +45,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PHAsset>()
     
     func viewIsReady() {
-        photosService.delegate = self
+        eventsDelegateHandler.delegate = self
         loadPhotos()
     }
     
@@ -103,12 +108,12 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
 }
 
-// MARK: - PhotosServiceDelegate
+// MARK: - EventsDelegate
 
-extension PhotosCollectionPresenter: PhotosServiceDelegate {
-    func photoLibraryDidChange(results: PHFetchResult<PHAsset>) {
-        DispatchQueue.main.async { [weak self] in
-            self?.updateData(on: results)
-        }
+extension PhotosCollectionPresenter: EventsDelegate {
+    @MainActor
+    func didChangeGallery(results: PHFetchResult<PHAsset>) {
+        updateData(on: results)
     }
 }
+

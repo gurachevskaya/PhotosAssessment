@@ -45,9 +45,11 @@ typealias PHAssetLocalIdentifier = String
 final class PhotosService: NSObject, PhotosServiceProtocol {
     
     private var imageCachingManager: PHCachingImageManager
-    
-    init(imageCachingManager: PHCachingImageManager) {
+    private let eventsActionHandler: EventsActionHandler
+
+    init(imageCachingManager: PHCachingImageManager, eventsActionHandler: EventsActionHandler) {
         self.imageCachingManager = imageCachingManager
+        self.eventsActionHandler = eventsActionHandler
         super.init()
         
         registerObserver()
@@ -154,7 +156,7 @@ extension PhotosService: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         if let change = changeInstance.changeDetails(for: results) {
             results = change.fetchResultAfterChanges
-            delegate?.photoLibraryDidChange(results: results)
+            eventsActionHandler.actionChangeGallery(results: results)
         }
     }
 }

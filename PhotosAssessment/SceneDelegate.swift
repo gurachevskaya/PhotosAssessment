@@ -29,7 +29,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func obtainRootController() -> UIViewController {
         let viewController = PhotosCollectionViewController()
         let presenter = PhotosCollectionPresenter(
-            photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!
+            photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!,
+            eventsDelegateHandler: DIContainer.shared.resolve(type: EventsProxy.self)!
         )
         presenter.delegate = viewController
         viewController.presenter = presenter
@@ -40,7 +41,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func registerServices() {
         let containter = DIContainer.shared
-        containter.register(type: PhotosServiceProtocol.self, component: PhotosService(imageCachingManager: PHCachingImageManager()))
+        containter.register(type: EventsProxy.self, component: EventsProxyImp())
+        containter.register(type: PhotosServiceProtocol.self, component: PhotosService(
+            imageCachingManager: PHCachingImageManager(),
+            eventsActionHandler: containter.resolve(type: EventsProxy.self)!)
+        )
         containter.register(type: SaliencyServiceProtocol.self, component: SaliencyService())
     }
 

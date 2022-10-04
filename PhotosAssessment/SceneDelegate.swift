@@ -12,15 +12,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        registerServices()
+
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let viewController = PhotosCollectionViewController()
             let presenter = PhotosCollectionPresenter(
-                photosService: PhotosService(
-                    imageCachingManager: PHCachingImageManager()
-                )
+                photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!
             )
             presenter.delegate = viewController
             viewController.presenter = presenter
@@ -29,7 +28,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window = window
             window.makeKeyAndVisible()
         }
+                
         guard let _ = (scene as? UIWindowScene) else { return }
+    }
+    
+    private func registerServices() {
+        let containter = DIContainer.shared
+        containter.register(type: PhotosServiceProtocol.self, component: PhotosService(imageCachingManager: PHCachingImageManager()))
+        containter.register(type: SaliencyServiceProtocol.self, component: SaliencyService())
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

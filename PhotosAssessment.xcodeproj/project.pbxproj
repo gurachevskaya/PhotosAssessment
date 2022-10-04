@@ -18,6 +18,7 @@
 		1814E94D28E4946C00B1FCBF /* PhotosAssessmentUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E94C28E4946C00B1FCBF /* PhotosAssessmentUITestsLaunchTests.swift */; };
 		1814E95B28E497A700B1FCBF /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E95A28E497A700B1FCBF /* PhotosCollectionViewController.swift */; };
 		183C627928EB843F007D945F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 183C627828EB843F007D945F /* Localizable.strings */; };
+		183C627B28EB9453007D945F /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183C627A28EB9453007D945F /* DIContainer.swift */; };
 		1857630F28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857630E28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift */; };
 		1857631128E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631028E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift */; };
 		1857631428E4C14400BC3FF6 /* PhotosCollectionSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857631328E4C14400BC3FF6 /* PhotosCollectionSection.swift */; };
@@ -67,6 +68,7 @@
 		1814E94C28E4946C00B1FCBF /* PhotosAssessmentUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAssessmentUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1814E95A28E497A700B1FCBF /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		183C627828EB843F007D945F /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		183C627A28EB9453007D945F /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		1857630E28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		1857631028E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionPresenter.swift; sourceTree = "<group>"; };
 		1857631328E4C14400BC3FF6 /* PhotosCollectionSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionSection.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 			children = (
 				1857631B28E5972700BC3FF6 /* PhotosService.swift */,
 				18C90E5528E7054B0065B368 /* SaliencyService.swift */,
+				183C627A28EB9453007D945F /* DIContainer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 				18C90E5F28E7338F0065B368 /* AnimatableContentModeImageView.swift in Sources */,
 				18C90E5B28E705C50065B368 /* DetailsPresenter.swift in Sources */,
 				1857632528E5FE7E00BC3FF6 /* UIViewController+Ext.swift in Sources */,
+				183C627B28EB9453007D945F /* DIContainer.swift in Sources */,
 				1814E92C28E4946A00B1FCBF /* SceneDelegate.swift in Sources */,
 				1857631928E4C59A00BC3FF6 /* PhotoAsset.swift in Sources */,
 				1857631128E4B9E800BC3FF6 /* PhotosCollectionPresenter.swift in Sources */,

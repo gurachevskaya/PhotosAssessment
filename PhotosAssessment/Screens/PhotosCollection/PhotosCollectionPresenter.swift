@@ -62,9 +62,10 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     func obtainDetailsViewController(asset: PHAsset) -> UIViewController {
         let destinationController = DetailsViewController()
-        let destinationPresenter = DetailsPresenter(photosService: PhotosService(
-            imageCachingManager: PHCachingImageManager()
-        ), saliencyService: SaliencyService())
+        let destinationPresenter = DetailsPresenter(
+            photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!,
+            saliencyService: DIContainer.shared.resolve(type: SaliencyServiceProtocol.self)!
+        )
         destinationController.presenter = destinationPresenter
         destinationPresenter.asset = asset
         destinationPresenter.delegate = destinationController

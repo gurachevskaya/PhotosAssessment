@@ -45,6 +45,19 @@ class DetailsPresenter: DetailsPresenterProtocol {
     func viewIsReady() {
         loadImage()
     }
+    
+    func drawSaliencyRectangle(for image: UIImage?) {
+        guard let image = image else { return }
+        
+        Task.detached(priority: .userInitiated) {
+            if let rect = try? self.saliencyService.getSaliencyRectangle(
+                for: image,
+                saliencyType: .attentionBased
+            ) {
+                await self.delegate?.drawRectangle(rect)
+            }
+        }
+    }
         
     private func loadImage() {
         guard let assetID = assetID else { return }
@@ -71,18 +84,5 @@ class DetailsPresenter: DetailsPresenterProtocol {
         )
         
         return image
-    }
-    
-    func drawSaliencyRectangle(for image: UIImage?) {
-        guard let image = image else { return }
-        
-        Task.detached(priority: .userInitiated) {
-            if let rect = try? self.saliencyService.getSaliencyRectangle(
-                for: image,
-                saliencyType: .attentionBased
-            ) {
-                await self.delegate?.drawRectangle(rect)
-            }
-        }
     }
 }

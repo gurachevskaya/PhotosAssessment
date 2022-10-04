@@ -7,6 +7,13 @@
 
 import UIKit
 
+extension DetailsViewController {
+    enum ViewConstants {
+        static let rectangleColor = UIColor.red.cgColor
+        static let rectangleBorderWidth: CGFloat = 20
+    }
+}
+
 class DetailsViewController: UIViewController {
     var presenter: DetailsPresenterProtocol!
     
@@ -78,7 +85,7 @@ class DetailsViewController: UIViewController {
         let croppedImage = originalImage?.cropTo(view: imageView)
         let image = contentMode == .scaleAspectFill ? croppedImage : originalImage
         
-        UIView.animate(withDuration: 0.6) {
+        UIView.animate(withDuration: AnimationDuration.mediumDuration.seconds) {
             self.imageView.contentMode = contentMode
             self.imageView.image = image
         }
@@ -102,9 +109,10 @@ extension DetailsViewController: DetailsPresenterDelegate {
         UIGraphicsBeginImageContext(image.size)
         
         let context = UIGraphicsGetCurrentContext()
+        
         image.draw(at: CGPoint.zero)
-        context?.setStrokeColor(UIColor.red.cgColor)
-        context?.stroke(rect, width: 20)
+        context?.setStrokeColor(ViewConstants.rectangleColor)
+        context?.stroke(rect, width: ViewConstants.rectangleBorderWidth)
         let imageWithRect = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()

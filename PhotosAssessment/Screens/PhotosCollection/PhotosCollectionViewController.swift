@@ -102,10 +102,6 @@ extension PhotosCollectionViewController: UICollectionViewDataSourcePrefetching 
 // MARK: - PhotosCollectionPresenterDelegate
 
 extension PhotosCollectionViewController: PhotosCollectionPresenterDelegate {
-    func didLoadPhotos() {
-        print("did load")
-    }
-    
     func didFailWithError(_ error: String) {
         showAlert(text: error)
     }

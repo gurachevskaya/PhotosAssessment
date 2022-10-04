@@ -43,6 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let containter = DIContainer.shared
         containter.register(type: EventsProxy.self, component: EventsProxyImp())
         containter.register(type: PhotosServiceProtocol.self, component: PhotosService(
+            maxNumberOfPhotos: Constants.maxNumberOfPhotos,
             imageCachingManager: PHCachingImageManager(),
             eventsActionHandler: containter.resolve(type: EventsProxy.self)!)
         )

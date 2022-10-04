@@ -44,10 +44,16 @@ typealias PHAssetLocalIdentifier = String
 
 final class PhotosService: NSObject, PhotosServiceProtocol {
     
-    private var imageCachingManager: PHCachingImageManager
+    private let maxNumberOfPhotos: Int
+    private let imageCachingManager: PHCachingImageManager
     private let eventsActionHandler: EventsActionHandler
 
-    init(imageCachingManager: PHCachingImageManager, eventsActionHandler: EventsActionHandler) {
+    init(
+        maxNumberOfPhotos: Int,
+        imageCachingManager: PHCachingImageManager,
+        eventsActionHandler: EventsActionHandler
+    ) {
+        self.maxNumberOfPhotos = maxNumberOfPhotos
         self.imageCachingManager = imageCachingManager
         self.eventsActionHandler = eventsActionHandler
         super.init()
@@ -59,7 +65,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     
     var authorizationStatus: PHAuthorizationStatus = .notDetermined
     var results = PHFetchResult<PHAsset>()
-        
+    
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }

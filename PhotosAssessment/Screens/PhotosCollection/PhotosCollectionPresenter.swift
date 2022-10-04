@@ -20,7 +20,6 @@ protocol PhotosCollectionPresenterProtocol {
 }
 
 protocol PhotosCollectionPresenterDelegate: AnyObject {
-    @MainActor func didLoadPhotos()
     @MainActor func didFailWithError(_ error: String)
 }
 
@@ -67,9 +66,15 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     func obtainDetailsViewController(asset: PHAsset) -> UIViewController {
         let destinationController = DetailsViewController()
+        guard
+            let photosService = DIContainer.shared.resolve(type: PhotosServiceProtocol.self),
+            let saliencyService = DIContainer.shared.resolve(type: SaliencyServiceProtocol.self)
+        else {
+            fatalError("Failed to resolve services")
+        }
         let destinationPresenter = DetailsPresenter(
-            photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!,
-            saliencyService: DIContainer.shared.resolve(type: SaliencyServiceProtocol.self)!
+            photosService: photosService,
+            saliencyService: saliencyService
         )
         destinationController.presenter = destinationPresenter
         destinationPresenter.assetID = asset.localIdentifier

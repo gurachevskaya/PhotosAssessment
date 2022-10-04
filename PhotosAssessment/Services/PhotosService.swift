@@ -59,9 +59,7 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     
     var authorizationStatus: PHAuthorizationStatus = .notDetermined
     var results = PHFetchResult<PHAsset>()
-    
-//    var task: Task<((), Error>?
-    
+        
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }

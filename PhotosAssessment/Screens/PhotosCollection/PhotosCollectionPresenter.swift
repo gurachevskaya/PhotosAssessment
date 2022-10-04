@@ -72,7 +72,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
             saliencyService: DIContainer.shared.resolve(type: SaliencyServiceProtocol.self)!
         )
         destinationController.presenter = destinationPresenter
-        destinationPresenter.asset = asset
+        destinationPresenter.assetID = asset.localIdentifier
         destinationPresenter.delegate = destinationController
         
         return destinationController

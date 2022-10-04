@@ -9,7 +9,7 @@ import UIKit
 import Photos
 
 protocol DetailsPresenterProtocol {
-    var asset: PHAsset? { get }
+    var assetID: PHAssetLocalIdentifier? { get }
     var delegate: DetailsPresenterDelegate? { get set }
     
     func viewIsReady()
@@ -39,32 +39,32 @@ class DetailsPresenter: DetailsPresenterProtocol {
     
     weak var delegate: DetailsPresenterDelegate?
     
-    var asset: PHAsset?
+    var assetID: PHAssetLocalIdentifier?
     
     func viewIsReady() {
         loadImage()
     }
         
     private func loadImage() {
-        guard let asset = asset else { return }
+        guard let assetID = assetID else { return }
 
         Task {
-            let lowQualityImage = await loadImage(asset: asset, imageQuality: .low)
+            let lowQualityImage = await loadImage(assetID: assetID, imageQuality: .low)
             await delegate?.setupInitialState(image: lowQualityImage)
             
-            let fullQualityImage = await loadImage(asset: asset, imageQuality: .full)
+            let fullQualityImage = await loadImage(assetID: assetID, imageQuality: .full)
             await delegate?.setupInitialState(image: fullQualityImage)
             
             drawSaliencyRectangle(for: fullQualityImage)
         }
     }
     
-    private func loadImage(asset: PHAsset, imageQuality: ImageQuality) async -> UIImage? {
+    private func loadImage(assetID: PHAssetLocalIdentifier, imageQuality: ImageQuality) async -> UIImage? {
         let lowQualityTargetSize = CGSize(width: 200, height: 200)
         let targetSize = imageQuality == .full ? PHImageManagerMaximumSize : lowQualityTargetSize
         
         let image = try? await photosService.fetchImage(
-            byLocalIdentifier: asset.localIdentifier,
+            byLocalIdentifier: assetID,
             targetSize: targetSize,
             contentMode: .aspectFit
         )

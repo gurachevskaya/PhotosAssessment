@@ -26,30 +26,11 @@ class PhotosCollectionViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var collectionLayout: UICollectionViewCompositionalLayout = {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0)
+    private lazy var collectionLayout: UICollectionViewLayout = {
+        .createSquaredLayout(
+            numberOfColumns: ViewConstants.numberOfColumns,
+            spacing: ViewConstants.collectionItemsSpacing
         )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalWidth(1 / CGFloat(ViewConstants.numberOfColumns))
-        )
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitem: item,
-            count: ViewConstants.numberOfColumns
-        )
-        group.interItemSpacing = .fixed(ViewConstants.collectionItemsSpacing)
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = ViewConstants.collectionItemsSpacing
-
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        return layout
     }()
     
     override func viewDidLoad() {

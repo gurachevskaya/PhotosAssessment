@@ -17,19 +17,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            let viewController = PhotosCollectionViewController()
-            let presenter = PhotosCollectionPresenter(
-                photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!
-            )
-            presenter.delegate = viewController
-            viewController.presenter = presenter
-            let navigationController = UINavigationController(rootViewController: viewController)
-            window.rootViewController = navigationController
+            let viewController = obtainRootController()
+            window.rootViewController = viewController
             self.window = window
             window.makeKeyAndVisible()
         }
                 
         guard let _ = (scene as? UIWindowScene) else { return }
+    }
+    
+    private func obtainRootController() -> UIViewController {
+        let viewController = PhotosCollectionViewController()
+        let presenter = PhotosCollectionPresenter(
+            photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!
+        )
+        presenter.delegate = viewController
+        viewController.presenter = presenter
+        let navigationController = UINavigationController(rootViewController: viewController)
+        
+        return navigationController
     }
     
     private func registerServices() {

@@ -9,10 +9,11 @@ import UIKit
 import Photos
 
 protocol DetailsPresenterProtocol {
-    var asset: PHAsset? { get }
+    var assetID: PHAssetLocalIdentifier? { get }
     var delegate: DetailsPresenterDelegate? { get set }
     
     func viewIsReady()
+    func drawSaliencyRectangle(for image: UIImage?)
 }
 
 protocol DetailsPresenterDelegate: AnyObject {
@@ -32,30 +33,20 @@ class DetailsPresenter: DetailsPresenterProtocol {
         self.saliencyService = saliencyService
     }
     
+    private enum ImageQuality {
+        case low
+        case full
+    }
+    
     weak var delegate: DetailsPresenterDelegate?
     
-    var asset: PHAsset?
+    var assetID: PHAssetLocalIdentifier?
     
     func viewIsReady() {
         loadImage()
     }
-        
-    private func loadImage() {
-        guard let asset = asset else { return }
-
-        Task {
-            let image = try? await photosService.fetchImage(
-                byLocalIdentifier: asset.localIdentifier,
-                targetSize: PHImageManagerMaximumSize,
-                contentMode: .aspectFit
-            )
-            await delegate?.setupInitialState(image: image)
-            
-            drawSaliencyRectangle(for: image)
-        }
-    }
     
-    private func drawSaliencyRectangle(for image: UIImage?) {
+    func drawSaliencyRectangle(for image: UIImage?) {
         guard let image = image else { return }
         
         Task.detached(priority: .userInitiated) {
@@ -66,5 +57,32 @@ class DetailsPresenter: DetailsPresenterProtocol {
                 await self.delegate?.drawRectangle(rect)
             }
         }
+    }
+        
+    private func loadImage() {
+        guard let assetID = assetID else { return }
+
+        Task {
+            let lowQualityImage = await loadImage(assetID: assetID, imageQuality: .low)
+            await delegate?.setupInitialState(image: lowQualityImage)
+            
+            let fullQualityImage = await loadImage(assetID: assetID, imageQuality: .full)
+            await delegate?.setupInitialState(image: fullQualityImage)
+            
+            drawSaliencyRectangle(for: fullQualityImage)
+        }
+    }
+    
+    private func loadImage(assetID: PHAssetLocalIdentifier, imageQuality: ImageQuality) async -> UIImage? {
+        let lowQualityTargetSize = CGSize(width: 200, height: 200)
+        let targetSize = imageQuality == .full ? PHImageManagerMaximumSize : lowQualityTargetSize
+        
+        let image = try? await photosService.fetchImage(
+            byLocalIdentifier: assetID,
+            targetSize: targetSize,
+            contentMode: .aspectFit
+        )
+        
+        return image
     }
 }

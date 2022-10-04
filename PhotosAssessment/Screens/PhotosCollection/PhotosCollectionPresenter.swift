@@ -20,16 +20,20 @@ protocol PhotosCollectionPresenterProtocol {
 }
 
 protocol PhotosCollectionPresenterDelegate: AnyObject {
-    @MainActor func didLoadPhotos()
     @MainActor func didFailWithError(_ error: String)
 }
 
 class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     private var photosService: PhotosServiceProtocol
+    private let eventsDelegateHandler: EventsDelegateHandler
     
-    init(photosService: PhotosServiceProtocol) {
+    init(
+        photosService: PhotosServiceProtocol,
+        eventsDelegateHandler: EventsDelegateHandler
+    ) {
         self.photosService = photosService
+        self.eventsDelegateHandler = eventsDelegateHandler
     }
     
     weak var delegate: PhotosCollectionPresenterDelegate?
@@ -40,7 +44,7 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     var snapshot = NSDiffableDataSourceSnapshot<PhotosCollectionSection, PHAsset>()
     
     func viewIsReady() {
-        photosService.delegate = self
+        eventsDelegateHandler.delegate = self
         loadPhotos()
     }
     
@@ -62,11 +66,18 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     
     func obtainDetailsViewController(asset: PHAsset) -> UIViewController {
         let destinationController = DetailsViewController()
-        let destinationPresenter = DetailsPresenter(photosService: PhotosService(
-            imageCachingManager: PHCachingImageManager()
-        ), saliencyService: SaliencyService())
+        guard
+            let photosService = DIContainer.shared.resolve(type: PhotosServiceProtocol.self),
+            let saliencyService = DIContainer.shared.resolve(type: SaliencyServiceProtocol.self)
+        else {
+            fatalError("Failed to resolve services")
+        }
+        let destinationPresenter = DetailsPresenter(
+            photosService: photosService,
+            saliencyService: saliencyService
+        )
         destinationController.presenter = destinationPresenter
-        destinationPresenter.asset = asset
+        destinationPresenter.assetID = asset.localIdentifier
         destinationPresenter.delegate = destinationController
         
         return destinationController
@@ -102,12 +113,12 @@ class PhotosCollectionPresenter: PhotosCollectionPresenterProtocol {
     }
 }
 
-// MARK: - PhotosServiceDelegate
+// MARK: - EventsDelegate
 
-extension PhotosCollectionPresenter: PhotosServiceDelegate {
-    func photoLibraryDidChange(results: PHFetchResult<PHAsset>) {
-        DispatchQueue.main.async { [weak self] in
-            self?.updateData(on: results)
-        }
+extension PhotosCollectionPresenter: EventsDelegate {
+    @MainActor
+    func didChangeGallery(results: PHFetchResult<PHAsset>) {
+        updateData(on: results)
     }
 }
+

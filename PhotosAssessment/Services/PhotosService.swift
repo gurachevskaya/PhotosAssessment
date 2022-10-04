@@ -15,9 +15,9 @@ enum PhotosServiceError: LocalizedError {
     var errorDescription: String {
         switch self {
         case .restrictedAccess:
-            return "Access restricted"
+            return NSLocalizedString("ERROR_ACCESS_RESTRICTED", comment: "")
         case .phAssetNotFound:
-            return "Asset not found"
+            return NSLocalizedString("ERROR_ASSET_NOT_FOUND", comment: "")
         }
     }
 }
@@ -44,10 +44,18 @@ typealias PHAssetLocalIdentifier = String
 
 final class PhotosService: NSObject, PhotosServiceProtocol {
     
-    private var imageCachingManager: PHCachingImageManager
-    
-    init(imageCachingManager: PHCachingImageManager) {
+    private let maxNumberOfPhotos: Int
+    private let imageCachingManager: PHCachingImageManager
+    private let eventsActionHandler: EventsActionHandler
+
+    init(
+        maxNumberOfPhotos: Int,
+        imageCachingManager: PHCachingImageManager,
+        eventsActionHandler: EventsActionHandler
+    ) {
+        self.maxNumberOfPhotos = maxNumberOfPhotos
         self.imageCachingManager = imageCachingManager
+        self.eventsActionHandler = eventsActionHandler
         super.init()
         
         registerObserver()
@@ -152,7 +160,7 @@ extension PhotosService: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         if let change = changeInstance.changeDetails(for: results) {
             results = change.fetchResultAfterChanges
-            delegate?.photoLibraryDidChange(results: results)
+            eventsActionHandler.actionChangeGallery(results: results)
         }
     }
 }

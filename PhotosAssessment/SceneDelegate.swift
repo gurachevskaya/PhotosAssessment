@@ -12,24 +12,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        registerServices()
+
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            let viewController = PhotosCollectionViewController()
-            let presenter = PhotosCollectionPresenter(
-                photosService: PhotosService(
-                    imageCachingManager: PHCachingImageManager()
-                )
-            )
-            presenter.delegate = viewController
-            viewController.presenter = presenter
-            let navigationController = UINavigationController(rootViewController: viewController)
-            window.rootViewController = navigationController
+            let viewController = obtainRootController()
+            window.rootViewController = viewController
             self.window = window
             window.makeKeyAndVisible()
         }
+                
         guard let _ = (scene as? UIWindowScene) else { return }
+    }
+    
+    private func obtainRootController() -> UIViewController {
+        let viewController = PhotosCollectionViewController()
+        let presenter = PhotosCollectionPresenter(
+            photosService: DIContainer.shared.resolve(type: PhotosServiceProtocol.self)!,
+            eventsDelegateHandler: DIContainer.shared.resolve(type: EventsProxy.self)!
+        )
+        presenter.delegate = viewController
+        viewController.presenter = presenter
+        let navigationController = UINavigationController(rootViewController: viewController)
+        
+        return navigationController
+    }
+    
+    private func registerServices() {
+        let containter = DIContainer.shared
+        containter.register(type: EventsProxy.self, component: EventsProxyImp())
+        containter.register(type: PhotosServiceProtocol.self, component: PhotosService(
+            maxNumberOfPhotos: Constants.maxNumberOfPhotos,
+            imageCachingManager: PHCachingImageManager(),
+            eventsActionHandler: containter.resolve(type: EventsProxy.self)!)
+        )
+        containter.register(type: SaliencyServiceProtocol.self, component: SaliencyService())
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

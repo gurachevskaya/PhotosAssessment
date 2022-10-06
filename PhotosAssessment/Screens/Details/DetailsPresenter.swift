@@ -49,12 +49,12 @@ class DetailsPresenter: DetailsPresenterProtocol {
     func drawSaliencyRectangle(for image: UIImage?) {
         guard let image = image else { return }
         
-        Task.detached(priority: .userInitiated) {
-            if let rect = try? self.saliencyService.getSaliencyRectangle(
+        Task {
+            if let rect = try? saliencyService.getSaliencyRectangle(
                 for: image,
                 saliencyType: .attentionBased
             ) {
-                await self.delegate?.drawRectangle(rect)
+                await delegate?.drawRectangle(rect)
             }
         }
     }

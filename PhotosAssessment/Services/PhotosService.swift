@@ -25,6 +25,8 @@ enum PhotosServiceError: LocalizedError {
 protocol PhotosServiceProtocol: AnyObject {
     var delegate: PhotosServiceDelegate? { get set }
     
+    func libraryEvents() -> AsyncStream<PHFetchResult<PHAsset>>
+    
     func fetchPhotos() async throws -> PHFetchResult<PHAsset>?
     
     func fetchImage(
@@ -46,16 +48,13 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     
     private let maxNumberOfPhotos: Int
     private let imageCachingManager: PHCachingImageManager
-    private let eventsActionHandler: EventsActionHandler
 
     init(
         maxNumberOfPhotos: Int,
-        imageCachingManager: PHCachingImageManager,
-        eventsActionHandler: EventsActionHandler
+        imageCachingManager: PHCachingImageManager
     ) {
         self.maxNumberOfPhotos = maxNumberOfPhotos
         self.imageCachingManager = imageCachingManager
-        self.eventsActionHandler = eventsActionHandler
         super.init()
         
         registerObserver()
@@ -65,7 +64,8 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
     
     var authorizationStatus: PHAuthorizationStatus = .notDetermined
     var results = PHFetchResult<PHAsset>()
-    
+    var libraryHandler: (PHFetchResult<PHAsset>) -> Void = { _ in }
+
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -141,6 +141,15 @@ final class PhotosService: NSObject, PhotosServiceProtocol {
         imageCachingManager.stopCachingImagesForAllAssets()
     }
     
+    func libraryEvents() -> AsyncStream<PHFetchResult<PHAsset>> {
+        let newAssets = AsyncStream(PHFetchResult<PHAsset>.self) { continuation in
+            libraryHandler = { newAssets in
+                continuation.yield(newAssets)
+            }
+        }
+        return newAssets
+    }
+
     private func fetchAllPhotos() -> PHFetchResult<PHAsset> {
         imageCachingManager.allowsCachingHighQualityImages = false
         let fetchOptions = PHFetchOptions()
@@ -160,7 +169,7 @@ extension PhotosService: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         if let change = changeInstance.changeDetails(for: results) {
             results = change.fetchResultAfterChanges
-            eventsActionHandler.actionChangeGallery(results: results)
+            libraryHandler(results)
         }
     }
 }

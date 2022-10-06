@@ -18,7 +18,6 @@
 		1814E95B28E497A700B1FCBF /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1814E95A28E497A700B1FCBF /* PhotosCollectionViewController.swift */; };
 		183C627928EB843F007D945F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 183C627828EB843F007D945F /* Localizable.strings */; };
 		183C627B28EB9453007D945F /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183C627A28EB9453007D945F /* DIContainer.swift */; };
-		183C627D28EC360F007D945F /* EventsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183C627C28EC360E007D945F /* EventsProxy.swift */; };
 		183C627F28EC3626007D945F /* NSPointerArray+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183C627E28EC3626007D945F /* NSPointerArray+Ext.swift */; };
 		183C628128EC767F007D945F /* UICollectionViewCompositionalLayout+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183C628028EC767F007D945F /* UICollectionViewCompositionalLayout+Ext.swift */; };
 		183C628328EC89B5007D945F /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183C628228EC89B5007D945F /* UIImage+Ext.swift */; };
@@ -69,7 +68,6 @@
 		1814E95A28E497A700B1FCBF /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		183C627828EB843F007D945F /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		183C627A28EB9453007D945F /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
-		183C627C28EC360E007D945F /* EventsProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsProxy.swift; sourceTree = "<group>"; };
 		183C627E28EC3626007D945F /* NSPointerArray+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPointerArray+Ext.swift"; sourceTree = "<group>"; };
 		183C628028EC767F007D945F /* UICollectionViewCompositionalLayout+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewCompositionalLayout+Ext.swift"; sourceTree = "<group>"; };
 		183C628228EC89B5007D945F /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
@@ -228,7 +226,6 @@
 				1857631B28E5972700BC3FF6 /* PhotosService.swift */,
 				18C90E5528E7054B0065B368 /* SaliencyService.swift */,
 				183C627A28EB9453007D945F /* DIContainer.swift */,
-				183C627C28EC360E007D945F /* EventsProxy.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -413,7 +410,6 @@
 				1857631C28E5972700BC3FF6 /* PhotosService.swift in Sources */,
 				18C90E6228E792510065B368 /* SaliencyType.swift in Sources */,
 				1814E95B28E497A700B1FCBF /* PhotosCollectionViewController.swift in Sources */,
-				183C627D28EC360F007D945F /* EventsProxy.swift in Sources */,
 				1857631428E4C14400BC3FF6 /* PhotosCollectionSection.swift in Sources */,
 				1857630F28E4B7BE00BC3FF6 /* PhotoCollectionViewCell.swift in Sources */,
 				18C90E5928E705B30065B368 /* DetailsViewController.swift in Sources */,
